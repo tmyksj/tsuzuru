@@ -1,0 +1,35 @@
+<main th:class="|mt-16 mx-auto w-11/12|"
+      xmlns:th="http://www.thymeleaf.org">
+    <h2 th:class="|text-3xl|"
+        th:text="|サインイン|"></h2>
+    <form th:action="@{/sign-in}"
+          th:class="|mt-16 mx-auto w-96|"
+          th:method="|post|">
+        <div th:class="|mt-4|">
+            <label th:class="|block mb-1 text-gray-600 text-sm|"
+                   th:for="|name|"
+                   th:text="|ユーザ名|"></label>
+            <input th:autocomplete="|username|"
+                   th:autofocus="|autofocus|"
+                   th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-full|"
+                   th:id="|name|"
+                   th:name="|name|"
+                   th:type="|text|">
+        </div>
+        <div th:class="|mt-4|">
+            <label th:class="|block mb-1 text-gray-600 text-sm|"
+                   th:for="|password|"
+                   th:text="|パスワード|"></label>
+            <input th:autocomplete="|current-password|"
+                   th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-full|"
+                   th:id="|password|"
+                   th:name="|password|"
+                   th:type="|password|">
+        </div>
+        <div th:class="|mt-6 text-right|">
+            <button th:class="|bg-red-900 focus:outline-none h-9 px-4 py-1 rounded text-gray-50|"
+                    th:text="|サインイン|"
+                    th:type="|submit|"></button>
+        </div>
+    </form>
+</main>

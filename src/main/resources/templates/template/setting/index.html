@@ -1,0 +1,60 @@
+<main th:class="|mt-16 mx-auto w-11/12|"
+      xmlns:th="http://www.thymeleaf.org">
+    <div th:class="|flex|">
+        <div th:class="|mb-16 mr-8 w-96|">
+            <h2 th:class="|text-xl|"
+                th:text="|ユーザ名の変更|"></h2>
+            <form th:action="@{/setting/name}"
+                  th:class="|w-full|"
+                  th:method="|post|"
+                  th:object="${nameForm}">
+                <div th:class="|mt-4|">
+                    <label th:class="|block mb-1 text-gray-600 text-sm|"
+                           th:for="|name|"
+                           th:text="|ユーザ名|"></label>
+                    <input th:autocomplete="|username|"
+                           th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-full|"
+                           th:field="*{name}"
+                           th:type="|text|">
+                </div>
+                <div th:class="|mt-4 text-right|">
+                    <button th:class="|bg-red-900 focus:outline-none h-9 px-4 py-1 rounded text-gray-50|"
+                            th:text="|変更|"
+                            th:type="|submit|"></button>
+                </div>
+            </form>
+        </div>
+        <div th:class="|mb-16 mr-8 w-96|">
+            <h2 th:class="|text-xl|"
+                th:text="|パスワードの変更|"></h2>
+            <form th:action="@{/setting/password}"
+                  th:class="|w-full|"
+                  th:method="|post|"
+                  th:object="${passwordForm}">
+                <div th:class="|mt-4|">
+                    <label th:class="|block mb-1 text-gray-600 text-sm|"
+                           th:for="|currentPassword|"
+                           th:text="|現在のパスワード|"></label>
+                    <input th:autocomplete="|current-password|"
+                           th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-full|"
+                           th:field="*{currentPassword}"
+                           th:type="|password|">
+                </div>
+                <div th:class="|mt-4|">
+                    <label th:class="|block mb-1 text-gray-600 text-sm|"
+                           th:for="|newPassword|"
+                           th:text="|新しいパスワード|"></label>
+                    <input th:autocomplete="|new-password|"
+                           th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-full|"
+                           th:field="*{newPassword}"
+                           th:type="|password|">
+                </div>
+                <div th:class="|mt-4 text-right|">
+                    <button th:class="|bg-red-900 focus:outline-none h-9 px-4 py-1 rounded text-gray-50|"
+                            th:text="|変更|"
+                            th:type="|submit|"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
