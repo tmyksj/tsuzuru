@@ -8,7 +8,6 @@ import tsuzuru.domain.entity.ItemEntity
 import tsuzuru.domain.entity.UserEntity
 import tsuzuru.domain.repository.ItemRepository
 import tsuzuru.infrastructure.jpa.entity.TblItemEntity
-import tsuzuru.infrastructure.jpa.entity.TblUserEntity
 import tsuzuru.infrastructure.jpa.repository.TblItemRepository
 import tsuzuru.infrastructure.jpa.repository.TblUserRepository
 import java.util.*
@@ -45,17 +44,25 @@ class ItemRepositoryImpl(
     }
 
     fun TblItemEntity.toDomainEntity(): ItemEntity {
-        val userEntity: UserEntity = userRepositoryImpl.run {
-            val tblUserEntity: TblUserEntity? = tblUserRepository.findByIdOrNull(tblUserUuid)
-            checkNotNull(tblUserEntity).toDomainEntity()
+        return listOf(this).toDomainEntity().first()
+    }
+
+    fun List<TblItemEntity>.toDomainEntity(): List<ItemEntity> {
+        val userEntityMap: Map<String, UserEntity> = userRepositoryImpl.run {
+            tblUserRepository
+                .findAllById(map { it.tblUserUuid })
+                .toDomainEntity()
+                .associateBy { it.uuid.toString() }
         }
 
-        return ItemEntity(
-            uuid = UUID.fromString(checkNotNull(uuid)),
-            userEntity = userEntity,
-            body = checkNotNull(body),
-            writtenDate = checkNotNull(writtenDate),
-        )
+        return map {
+            ItemEntity(
+                uuid = UUID.fromString(checkNotNull(it.uuid)),
+                userEntity = checkNotNull(userEntityMap[it.tblUserUuid]),
+                body = checkNotNull(it.body),
+                writtenDate = checkNotNull(it.writtenDate),
+            )
+        }
     }
 
 }

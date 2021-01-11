@@ -1,6 +1,36 @@
 <main th:class="|mt-16 mx-auto w-11/12|"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:th="http://www.thymeleaf.org">
-    <h1 th:class="|text-4xl|"
-        th:text="|tsuzuru|"></h1>
-    <p th:text="|日々を綴る。|"></p>
+    <th:block sec:authorize="${isAnonymous()}">
+        <h1 th:class="|text-4xl|"
+            th:text="|tsuzuru|"></h1>
+        <p th:text="|日々を綴る。|"></p>
+    </th:block>
+    <th:block sec:authorize="${isAuthenticated()}">
+        <div th:class="|bottom-2 fixed left-0 right-0 top-32|">
+            <div th:class="|flex h-full mx-auto w-11/12|">
+                <div th:class="|flex flex-col w-8/12|">
+                    <div th:class="|flex-1 overflow-y-scroll|">
+                        <div th:class="|my-4|"
+                             th:each="itemEntity : ${response.itemEntityList}">
+                            <span th:class="|text-gray-500 text-xs|"
+                                  th:text="${itemEntity.writtenDate}"></span>
+                            <p th:text="${itemEntity.body}"></p>
+                        </div>
+                    </div>
+                    <form th:action="@{/item/create}"
+                          th:class="|relative|"
+                          th:method="|post|"
+                          th:object="${itemCreateForm}">
+                    <textarea
+                            th:class="|block border border-gray-300 focus:border-red-900 focus:outline-none h-20 px-4 py-1 resize-none rounded w-full|"
+                            th:field="*{body}"></textarea>
+                        <button th:class="|absolute bg-red-900 bottom-1 focus:outline-none h-8 px-4 right-4 rounded text-gray-50 text-sm|"
+                                th:text="|投稿|"
+                                th:type="|submit|"></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </th:block>
 </main>

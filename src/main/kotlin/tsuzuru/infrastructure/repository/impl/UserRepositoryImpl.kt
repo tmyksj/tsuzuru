@@ -62,7 +62,7 @@ class UserRepositoryImpl(
             repository = tblUserRoleRepository,
             entityList = entity.roleList,
             entityKeySelector = { it.toString() },
-            tblEntityList = tblUserRoleRepository.findAllByIdTblUserUuid(entity.uuid.toString()),
+            tblEntityList = tblUserRoleRepository.findByIdTblUserUuid(entity.uuid.toString()),
             tblEntityKeySelector = { id?.emUserRoleValue },
             tblEntitySetter = {
                 id = TblUserRoleEntity.Id(
@@ -76,14 +76,25 @@ class UserRepositoryImpl(
     }
 
     fun TblUserEntity.toDomainEntity(): UserEntity {
-        return UserEntity(
-            uuid = UUID.fromString(checkNotNull(uuid)),
-            name = checkNotNull(name),
-            passwordEncrypted = checkNotNull(passwordEncrypted),
-            roleList = tblUserRoleRepository.findAllByIdTblUserUuid(checkNotNull(uuid)).map {
-                UserEntity.Role.valueOf(checkNotNull(it.id?.emUserRoleValue))
-            },
-        )
+        return listOf(this).toDomainEntity().first()
+    }
+
+    fun List<TblUserEntity>.toDomainEntity(): List<UserEntity> {
+        val roleListMap: Map<String, List<UserEntity.Role>> =
+            tblUserRoleRepository
+                .findByIdTblUserUuidIn(map { checkNotNull(it.uuid) })
+                .groupBy(
+                    { checkNotNull(it.id?.tblUserUuid) },
+                    { UserEntity.Role.valueOf(checkNotNull(it.id?.emUserRoleValue)) })
+
+        return map {
+            UserEntity(
+                uuid = UUID.fromString(checkNotNull(it.uuid)),
+                name = checkNotNull(it.name),
+                passwordEncrypted = checkNotNull(it.passwordEncrypted),
+                roleList = checkNotNull(roleListMap[it.uuid])
+            )
+        }
     }
 
 }

@@ -7,4 +7,8 @@ import tsuzuru.infrastructure.jpa.entity.TblItemEntity
 
 @Repository
 @Transactional
-interface TblItemRepository : AbstractRepository<TblItemEntity, String>
+interface TblItemRepository : AbstractRepository<TblItemEntity, String> {
+
+    fun findByTblUserUuidOrderByWrittenDateAsc(tblUserUuid: String): List<TblItemEntity>
+
+}

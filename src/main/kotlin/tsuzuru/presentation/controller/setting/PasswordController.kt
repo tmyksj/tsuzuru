@@ -51,7 +51,7 @@ class PasswordController(
             view(
                 model, HttpStatus.BAD_REQUEST,
                 layout = "layout/default",
-                template = "template/setting/index",
+                template = "template/setting/password",
                 errorMessageList = listOf("入力項目を確認してください。"),
             )
         }.rcurl()
