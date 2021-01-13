@@ -1,6 +1,7 @@
 package tsuzuru.common.presentation.controller.impl
 
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.servlet.ModelAndView
@@ -10,6 +11,38 @@ import tsuzuru.common.presentation.exception.PresentationException
 import kotlin.reflect.KClass
 
 abstract class AbstractControllerImpl {
+
+    fun body(
+        status: HttpStatus,
+        informationMessageList: List<String> = listOf(),
+        warningMessageList: List<String> = listOf(),
+        errorMessageList: List<String> = listOf(),
+    ): Any {
+        return ResponseEntity(
+            mapOf(
+                "informationMessageList" to informationMessageList,
+                "warningMessageList" to warningMessageList,
+                "errorMessageList" to errorMessageList,
+            ), status
+        )
+    }
+
+    fun <T> body(
+        status: HttpStatus,
+        body: T,
+        informationMessageList: List<String> = listOf(),
+        warningMessageList: List<String> = listOf(),
+        errorMessageList: List<String> = listOf(),
+    ): Any {
+        return ResponseEntity(
+            mapOf(
+                "body" to body,
+                "informationMessageList" to informationMessageList,
+                "warningMessageList" to warningMessageList,
+                "errorMessageList" to errorMessageList,
+            ), status
+        )
+    }
 
     fun checkErrors(bindingResult: BindingResult) {
         if (bindingResult.hasErrors()) {

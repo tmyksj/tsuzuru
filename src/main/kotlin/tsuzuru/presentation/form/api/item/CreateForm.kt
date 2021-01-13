@@ -1,4 +1,4 @@
-package tsuzuru.presentation.form.item
+package tsuzuru.presentation.form.api.item
 
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size

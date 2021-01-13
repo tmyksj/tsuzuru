@@ -12,19 +12,22 @@
                 <div th:class="|flex flex-col w-8/12|">
                     <div th:class="|flex-1 overflow-y-scroll|">
                         <div th:class="|my-4|"
-                             th:each="itemEntity : ${response.itemEntityList}">
+                             th:v-bind:key="itemEntity.uuid"
+                             th:v-for="|itemEntity in itemEntityList|">
                             <span th:class="|text-gray-500 text-xs|"
-                                  th:text="${itemEntity.writtenDate}"></span>
-                            <p th:text="${itemEntity.body}"></p>
+                                  th:text="|{{itemEntity.writtenDate}}|"></span>
+                            <p th:text="|{{itemEntity.body}}|"></p>
                         </div>
                     </div>
-                    <form th:action="@{/item/create}"
+                    <form th:action="@{/api/item/create}"
                           th:class="|relative|"
                           th:method="|post|"
-                          th:object="${itemCreateForm}">
-                    <textarea
-                            th:class="|block border border-gray-300 focus:border-red-900 focus:outline-none h-20 px-4 py-1 resize-none rounded w-full|"
-                            th:field="*{body}"></textarea>
+                          th:v-on:submit.prevent="|onSubmit|">
+                        <textarea
+                                th:class="|block border border-gray-300 focus:border-red-900 focus:outline-none h-20 px-4 py-1 resize-none rounded w-full|"
+                                th:name="|body|"
+                                th:v-model="|body|"
+                                th:v-on:keyup.ctrl.enter.prevent="|onSubmit|"></textarea>
                         <button th:class="|absolute bg-red-900 bottom-1 focus:outline-none h-8 px-4 right-4 rounded text-gray-50 text-sm|"
                                 th:text="|投稿|"
                                 th:type="|submit|"></button>
@@ -32,5 +35,39 @@
                 </div>
             </div>
         </div>
+        <script th:inline="javascript">
+            ({
+                data() {
+                    return {
+                        body: "",
+                        itemEntityList: [],
+                    };
+                },
+                methods: {
+                    fetchInformation() {
+                        fetch("/api/information")
+                            .then((response) => {
+                                return response.json();
+                            })
+                            .then((response) => {
+                                this.itemEntityList = response.body.itemEntityList;
+                            });
+                    },
+                    onSubmit(event) {
+                        fetch("/api/item/create", {
+                            body: new FormData(event.target.closest("form")),
+                            method: "post",
+                        })
+                            .then((response) => {
+                                this.body = "";
+                                this.fetchInformation();
+                            });
+                    },
+                },
+                mounted() {
+                    this.fetchInformation();
+                },
+            });
+        </script>
     </th:block>
 </main>
