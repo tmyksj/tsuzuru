@@ -7,6 +7,6 @@ data class CreateForm(
 
     @field:NotBlank
     @field:Size(max = 1024, min = 0)
-    var body: String? = null,
+    val body: String? = null,
 
     )

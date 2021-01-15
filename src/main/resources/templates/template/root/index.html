@@ -12,11 +12,11 @@
                 <div th:class="|flex flex-col w-8/12|">
                     <div th:class="|flex-1 overflow-y-scroll|">
                         <div th:class="|my-4|"
-                             th:v-bind:key="itemEntity.uuid"
-                             th:v-for="|itemEntity in itemEntityList|">
+                             th:v-bind:key="item.uuid"
+                             th:v-for="|item in itemList|">
                             <span th:class="|text-gray-500 text-xs|"
-                                  th:text="|{{itemEntity.writtenDate}}|"></span>
-                            <p th:text="|{{itemEntity.body}}|"></p>
+                                  th:text="|{{item.writtenDate}}|"></span>
+                            <p th:text="|{{item.body}}|"></p>
                         </div>
                     </div>
                     <form th:action="@{/api/item/create}"
@@ -40,7 +40,7 @@
                 data() {
                     return {
                         body: "",
-                        itemEntityList: [],
+                        itemList: [],
                     };
                 },
                 methods: {
@@ -50,7 +50,7 @@
                                 return response.json();
                             })
                             .then((response) => {
-                                this.itemEntityList = response.body.itemEntityList;
+                                this.itemList = response.body.itemList.reverse();
                             });
                     },
                     onSubmit(event) {

@@ -23,6 +23,7 @@ class IndexControllerTests {
         controllerSupport.perform {
             MockMvcRequestBuilders.get("/api/information")
                 .with(SecurityMockMvcRequestPostProcessors.user(principalSupport.principal()))
+                .param("page", "2021-01-01T00:00:00.000Z")
         }.andExpect(MockMvcResultMatchers.status().isOk)
     }
 

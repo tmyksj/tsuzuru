@@ -24,7 +24,10 @@ class IndexController(
             checkErrors(bindingResult)
 
             val response: UserGetsInformationUseCase.Response = userGetsInformationUseCase.perform(
-                UserGetsInformationUseCase.Request()
+                UserGetsInformationUseCase.Request(
+                    page = checkNotNull(form.page),
+                    size = checkNotNull(form.size),
+                )
             )
 
             body(

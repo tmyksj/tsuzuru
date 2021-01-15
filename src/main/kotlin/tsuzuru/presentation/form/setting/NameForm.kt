@@ -9,6 +9,6 @@ data class NameForm(
     @field:NotBlank
     @field:Pattern(regexp = "[\\w-]+")
     @field:Size(max = 255, min = 6)
-    var name: String? = null,
+    val name: String? = null,
 
     )
