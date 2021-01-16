@@ -7,10 +7,10 @@ data class PasswordForm(
 
     @field:NotBlank
     @field:Size(max = 255, min = 8)
-    var currentPassword: String? = null,
+    val currentPassword: String? = null,
 
     @field:NotBlank
     @field:Size(max = 255, min = 8)
-    var newPassword: String? = null,
+    val newPassword: String? = null,
 
     )

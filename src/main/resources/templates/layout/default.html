@@ -8,51 +8,76 @@
     <title th:text="|tsuzuru|"></title>
     <link th:href="|https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css|"
           th:rel="|stylesheet|">
+    <script th:src="|https://unpkg.com/vue@next|"></script>
 </head>
-<body th:class="|bg-gray-50 text-gray-900|">
-<header th:class="|bg-red-900 flex h-16 items-center p-4 text-gray-50|">
-    <h1 th:class="|flex-1|">
-        <a th:class="|text-2xl|"
-           th:href="@{/}"
-           th:text="|tsuzuru|"></a>
-    </h1>
-    <div sec:authorize="${isAnonymous()}"
-         th:class="|flex flex-none|">
-        <a th:class="|ml-6|"
-           th:href="@{/sign-in}"
-           th:text="|サインイン|"></a>
-        <a th:class="|ml-6|"
-           th:href="@{/sign-up}"
-           th:text="|サインアップ|"></a>
-    </div>
-    <div sec:authorize="${isAuthenticated()}"
-         th:class="|flex flex-none|">
-        <a th:class="|ml-6|"
-           th:href="@{/setting}"
-           th:text="|設定|"></a>
-        <form th:action="@{/sign-out}"
-              th:method="|post|">
-            <button th:class="|focus:outline-none ml-6|"
-                    th:text="|サインアウト|"
-                    th:type="|submit|"></button>
-        </form>
-    </div>
-</header>
-<main th:replace="~{${template}}">
-</main>
-<div th:class="|bottom-0 fixed right-0 w-96|">
-    <div th:class="|bg-blue-200 mx-4 my-2 px-4 py-1 rounded text-blue-900|"
-         th:each="informationMessage : ${informationMessageList}">
-        <p th:text="${informationMessage}"></p>
-    </div>
-    <div th:class="|bg-yellow-200 mx-4 my-2 px-4 py-1 rounded text-yellow-900|"
-         th:each="warningMessage : ${warningMessageList}">
-        <p th:text="${warningMessage}"></p>
-    </div>
-    <div th:class="|bg-red-200 mx-4 my-2 px-4 py-1 rounded text-red-900|"
-         th:each="errorMessage : ${errorMessageList}">
-        <p th:text="${errorMessage}"></p>
+<body>
+<div th:class="|bg-gray-50 min-h-screen text-gray-900|">
+    <header th:class="|bg-red-900 flex h-16 items-center p-4 text-gray-50|">
+        <h1 th:class="|flex-1|">
+            <a th:class="|text-2xl|"
+               th:href="@{/}"
+               th:text="|tsuzuru|"></a>
+        </h1>
+        <div sec:authorize="${isAnonymous()}"
+             th:class="|flex flex-none|">
+            <a th:class="|ml-6|"
+               th:href="@{/sign-in}"
+               th:text="|サインイン|"></a>
+            <a th:class="|ml-6|"
+               th:href="@{/sign-up}"
+               th:text="|サインアップ|"></a>
+        </div>
+        <div sec:authorize="${isAuthenticated()}"
+             th:class="|flex flex-none|">
+            <a th:class="|ml-6|"
+               th:href="@{/setting}"
+               th:text="|設定|"></a>
+            <form th:action="@{/sign-out}"
+                  th:method="|post|">
+                <button th:class="|focus:outline-none ml-6|"
+                        th:text="|サインアウト|"
+                        th:type="|submit|"></button>
+            </form>
+        </div>
+    </header>
+    <main th:replace="~{${template}}">
+    </main>
+    <div th:class="|bottom-0 fixed right-0 w-96|">
+        <div th:class="|bg-blue-200 mx-4 my-2 px-4 py-1 rounded text-blue-900|"
+             th:v-bind:key="informationMessage"
+             th:v-for="|informationMessage in informationMessageList|">
+            <p th:text="|{{informationMessage}}|"></p>
+        </div>
+        <div th:class="|bg-yellow-200 mx-4 my-2 px-4 py-1 rounded text-yellow-900|"
+             th:v-bind:key="warningMessage"
+             th:v-for="|warningMessage in warningMessageList|">
+            <p th:text="|{{warningMessage}}|"></p>
+        </div>
+        <div th:class="|bg-red-200 mx-4 my-2 px-4 py-1 rounded text-red-900|"
+             th:v-bind:key="errorMessage"
+             th:v-for="|errorMessage in errorMessageList|">
+            <p th:text="|{{errorMessage}}|"></p>
+        </div>
     </div>
 </div>
+<script th:inline="javascript">
+    Vue.createApp({
+        data() {
+            return {
+                errorMessageList: [[${errorMessageList}]],
+                informationMessageList: [[${informationMessageList}]],
+                warningMessageList: [[${warningMessageList}]],
+            };
+        },
+        mixins: Array.from(document.querySelectorAll("script"))
+            .filter((value) => {
+                return value.innerHTML.trim().match(/^\({.*}\);$/s);
+            })
+            .map((value) => {
+                value.remove();
+                return new Function(`return ${value.innerHTML.trim()}`)();
+            }),
+    }).mount("body > div");
+</script>
 </body>
 </html>

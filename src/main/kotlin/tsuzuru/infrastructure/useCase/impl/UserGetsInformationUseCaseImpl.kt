@@ -1,5 +1,6 @@
 package tsuzuru.infrastructure.useCase.impl
 
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import tsuzuru.domain.entity.ItemEntity
@@ -24,12 +25,21 @@ class UserGetsInformationUseCaseImpl(
 
         val itemEntityList: List<ItemEntity> = itemRepositoryImpl.run {
             tblItemRepository
-                .findByTblUserUuidOrderByWrittenDateAsc(principal.userEntity.uuid.toString())
-                .toDomainEntity()
+                .findByTblUserUuidAndWrittenDateLessThanEqualOrderByWrittenDateDesc(
+                    tblUserUuid = principal.userEntity.uuid.toString(),
+                    writtenDate = request.page,
+                    pageable = PageRequest.of(0, request.size),
+                ).toDomainEntity()
         }
 
         return UserGetsInformationUseCase.Response(
-            itemEntityList = itemEntityList,
+            itemList = itemEntityList.map {
+                UserGetsInformationUseCase.Item(
+                    uuid = it.uuid,
+                    body = it.body,
+                    writtenDate = it.writtenDate,
+                )
+            },
         )
     }
 

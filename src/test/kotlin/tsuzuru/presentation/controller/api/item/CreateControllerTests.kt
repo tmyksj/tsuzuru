@@ -1,4 +1,4 @@
-package tsuzuru.presentation.controller.item
+package tsuzuru.presentation.controller.api.item
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,19 +20,19 @@ class CreateControllerTests {
     private lateinit var principalSupport: PrincipalSupport
 
     @Test
-    fun post_responds_302() {
+    fun post_responds_201() {
         controllerSupport.perform {
-            MockMvcRequestBuilders.post("/item/create")
+            MockMvcRequestBuilders.post("/api/item/create")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .with(SecurityMockMvcRequestPostProcessors.user(principalSupport.principal()))
                 .param("body", UUID.randomUUID().toString())
-        }.andExpect(MockMvcResultMatchers.status().isFound)
+        }.andExpect(MockMvcResultMatchers.status().isCreated)
     }
 
     @Test
     fun post_responds_400_when_params_are_invalid() {
         controllerSupport.perform {
-            MockMvcRequestBuilders.post("/item/create")
+            MockMvcRequestBuilders.post("/api/item/create")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .with(SecurityMockMvcRequestPostProcessors.user(principalSupport.principal()))
                 .param("body", "")
