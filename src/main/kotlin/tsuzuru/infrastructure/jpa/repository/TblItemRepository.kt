@@ -11,6 +11,11 @@ import java.time.LocalDateTime
 @Transactional
 interface TblItemRepository : AbstractRepository<TblItemEntity, String> {
 
+    fun findByTblUserUuidAndWrittenDateGreaterThanEqualOrderByWrittenDateDesc(
+        tblUserUuid: String,
+        writtenDate: LocalDateTime,
+    ): List<TblItemEntity>
+
     fun findByTblUserUuidAndWrittenDateLessThanEqualOrderByWrittenDateDesc(
         tblUserUuid: String,
         writtenDate: LocalDateTime,
