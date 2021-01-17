@@ -33,6 +33,25 @@
                                 th:type="|submit|"></button>
                     </form>
                 </div>
+                <div th:class="|pl-12 w-4/12|">
+                    <h2 th:class="|my-4 text-xl|"
+                        th:text="|最近の活動|"></h2>
+                    <div th:class="|my-4|">
+                        <span th:class="|text-gray-500 text-xs|"
+                              th:text="|投稿数|"></span>
+                        <p th:text="|{{size}}|"></p>
+                    </div>
+                    <div th:class="|my-4|">
+                        <span th:class="|text-gray-500 text-xs|"
+                              th:text="|単語|"></span>
+                        <div>
+                            <span th:class="|pr-4|"
+                                  th:text="|{{noun}}|"
+                                  th:v-bind:key="noun"
+                                  th:v-for="|noun in nounList|"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <script th:inline="javascript">
@@ -41,11 +60,23 @@
                     return {
                         body: "",
                         itemList: [],
+                        nounList: [],
+                        size: 0,
                     };
                 },
                 methods: {
                     fetchInformation() {
                         fetch("/api/information")
+                            .then((response) => {
+                                return response.json();
+                            })
+                            .then((response) => {
+                                this.nounList = response.body.nounList;
+                                this.size = response.body.size;
+                            });
+                    },
+                    fetchItemList() {
+                        fetch("/api/item")
                             .then((response) => {
                                 return response.json();
                             })
@@ -61,11 +92,13 @@
                             .then((response) => {
                                 this.body = "";
                                 this.fetchInformation();
+                                this.fetchItemList();
                             });
                     },
                 },
                 mounted() {
                     this.fetchInformation();
+                    this.fetchItemList();
                 },
             });
         </script>
