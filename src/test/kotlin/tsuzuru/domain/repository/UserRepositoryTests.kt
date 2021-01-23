@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import tsuzuru.common.domain.query.Page
+import tsuzuru.common.domain.query.Pageable
 import tsuzuru.domain.entity.UserEntity
 import tsuzuru.test.EntitySupport
 import java.util.*
@@ -16,6 +18,18 @@ class UserRepositoryTests {
 
     @Autowired
     private lateinit var entitySupport: EntitySupport
+
+    @Test
+    fun exists_returns_true() {
+        val ret: Boolean = userRepository.existsByRole(entitySupport.userEntity().roleList.first())
+        Assertions.assertThat(ret).isTrue
+    }
+
+    @Test
+    fun findAll_returns_entities() {
+        val page: Page<UserEntity> = userRepository.findAll(Pageable(0, 10))
+        Assertions.assertThat(page.entityList).hasSizeLessThanOrEqualTo(10)
+    }
 
     @Test
     fun findByName_returns_entity() {

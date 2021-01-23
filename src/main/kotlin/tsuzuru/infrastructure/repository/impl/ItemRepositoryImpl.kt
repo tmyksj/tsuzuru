@@ -1,8 +1,11 @@
 package tsuzuru.infrastructure.repository.impl
 
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import tsuzuru.common.domain.query.Page
+import tsuzuru.common.domain.query.Pageable
 import tsuzuru.common.infrastructure.repository.impl.AbstractRepositoryImpl
 import tsuzuru.domain.entity.ItemEntity
 import tsuzuru.domain.entity.UserEntity
@@ -19,6 +22,10 @@ class ItemRepositoryImpl(
     private val tblUserRepository: TblUserRepository,
     private val userRepositoryImpl: UserRepositoryImpl,
 ) : AbstractRepositoryImpl(), ItemRepository {
+
+    override fun findAll(pageable: Pageable): Page<ItemEntity> {
+        return tblItemRepository.findAll(PageRequest.of(pageable.page, pageable.size)).toPage()
+    }
 
     override fun findByUuid(uuid: UUID): ItemEntity? {
         return tblItemRepository.findByIdOrNull(uuid.toString())?.toDomainEntity()
@@ -41,6 +48,15 @@ class ItemRepositoryImpl(
         )
 
         return tblItemEntity.toDomainEntity()
+    }
+
+    fun org.springframework.data.domain.Page<TblItemEntity>.toPage(): Page<ItemEntity> {
+        return Page(
+            entityList = toList().toDomainEntity(),
+            pageable = Pageable(pageable.pageNumber, pageable.pageSize),
+            totalPage = totalPages,
+            totalSize = totalElements.toInt(),
+        )
     }
 
     fun TblItemEntity.toDomainEntity(): ItemEntity {

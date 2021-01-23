@@ -1,8 +1,11 @@
 package tsuzuru.infrastructure.repository.impl
 
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import tsuzuru.common.domain.query.Page
+import tsuzuru.common.domain.query.Pageable
 import tsuzuru.common.infrastructure.repository.impl.AbstractRepositoryImpl
 import tsuzuru.domain.entity.UserEntity
 import tsuzuru.domain.repository.UserRepository
@@ -24,6 +27,10 @@ class UserRepositoryImpl(
 
     override fun existsByRole(role: UserEntity.Role): Boolean {
         return tblUserRoleRepository.existsByIdEmUserRoleValue(role.toString())
+    }
+
+    override fun findAll(pageable: Pageable): Page<UserEntity> {
+        return tblUserRepository.findAll(PageRequest.of(pageable.page, pageable.size)).toPage()
     }
 
     override fun findByName(name: String): UserEntity? {
@@ -77,6 +84,15 @@ class UserRepositoryImpl(
         )
 
         return tblEntity.toDomainEntity()
+    }
+
+    fun org.springframework.data.domain.Page<TblUserEntity>.toPage(): Page<UserEntity> {
+        return Page(
+            entityList = toList().toDomainEntity(),
+            pageable = Pageable(pageable.pageNumber, pageable.pageSize),
+            totalPage = totalPages,
+            totalSize = totalElements.toInt(),
+        )
     }
 
     fun TblUserEntity.toDomainEntity(): UserEntity {
