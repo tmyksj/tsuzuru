@@ -9,6 +9,8 @@ import tsuzuru.infrastructure.jpa.entity.TblUserRoleEntity
 @Transactional
 interface TblUserRoleRepository : AbstractRepository<TblUserRoleEntity, TblUserRoleEntity.Id> {
 
+    fun existsByIdEmUserRoleValue(emUserRoleValue: String): Boolean
+
     fun findByIdTblUserUuid(tblUserUuid: String): List<TblUserRoleEntity>
 
     fun findByIdTblUserUuidIn(tblUserUuidList: List<String>): List<TblUserRoleEntity>

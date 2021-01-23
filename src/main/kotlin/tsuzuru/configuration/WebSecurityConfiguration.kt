@@ -17,9 +17,12 @@ class WebSecurityConfiguration(
 
         http.authorizeRequests()
             .antMatchers("/").permitAll()
+            .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/api/**").hasRole("USER")
+            .antMatchers("/setting/**").hasRole("USER")
             .antMatchers("/sign-in").permitAll()
             .antMatchers("/sign-up").permitAll()
-            .anyRequest().authenticated()
+            .anyRequest().denyAll()
         http.formLogin()
             .loginPage("/sign-in")
             .loginProcessingUrl("/sign-in")

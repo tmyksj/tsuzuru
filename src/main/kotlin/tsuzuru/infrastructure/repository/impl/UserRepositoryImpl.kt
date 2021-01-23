@@ -22,6 +22,10 @@ class UserRepositoryImpl(
     private val tblUserRoleRepository: TblUserRoleRepository,
 ) : AbstractRepositoryImpl(), UserRepository {
 
+    override fun existsByRole(role: UserEntity.Role): Boolean {
+        return tblUserRoleRepository.existsByIdEmUserRoleValue(role.toString())
+    }
+
     override fun findByName(name: String): UserEntity? {
         return tblUserRepository.findByName(name)?.toDomainEntity()
     }
