@@ -20,6 +20,10 @@ class ItemRepositoryImpl(
     private val userRepositoryImpl: UserRepositoryImpl,
 ) : AbstractRepositoryImpl(), ItemRepository {
 
+    override fun delete(entity: ItemEntity) {
+        tblItemRepository.deleteById(entity.uuid.toString())
+    }
+
     override fun findByUuid(uuid: UUID): ItemEntity? {
         return tblItemRepository.findByIdOrNull(uuid.toString())?.toDomainEntity()
     }

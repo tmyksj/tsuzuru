@@ -22,6 +22,10 @@ class UserRepositoryImpl(
     private val tblUserRoleRepository: TblUserRoleRepository,
 ) : AbstractRepositoryImpl(), UserRepository {
 
+    override fun delete(entity: UserEntity) {
+        tblUserRepository.deleteById(entity.uuid.toString())
+    }
+
     override fun findByName(name: String): UserEntity? {
         return tblUserRepository.findByName(name)?.toDomainEntity()
     }
