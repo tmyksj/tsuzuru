@@ -26,9 +26,7 @@ class UserModifiesItemUseCaseImpl(
         }
 
         itemRepository.save(
-            itemEntity.copy(
-                body = request.body,
-            )
+            itemEntity.modifyBody(request.body)
         )
 
         return UserModifiesItemUseCase.Response()
