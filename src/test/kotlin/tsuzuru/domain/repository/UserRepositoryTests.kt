@@ -18,6 +18,15 @@ class UserRepositoryTests {
     private lateinit var entitySupport: EntitySupport
 
     @Test
+    fun delete_deletes_entity() {
+        val userEntity: UserEntity = entitySupport.userEntity()
+        userRepository.delete(userEntity)
+
+        val entity: UserEntity? = userRepository.findByUuid(userEntity.uuid)
+        Assertions.assertThat(entity).isNull()
+    }
+
+    @Test
     fun findByName_returns_entity() {
         val userEntity: UserEntity = entitySupport.userEntity()
         val entity: UserEntity? = userRepository.findByName(userEntity.name)

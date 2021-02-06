@@ -18,6 +18,15 @@ class ItemRepositoryTests {
     private lateinit var entitySupport: EntitySupport
 
     @Test
+    fun delete_deletes_entity() {
+        val itemEntity: ItemEntity = entitySupport.itemEntity()
+        itemRepository.delete(itemEntity)
+
+        val entity: ItemEntity? = itemRepository.findByUuid(itemEntity.uuid)
+        Assertions.assertThat(entity).isNull()
+    }
+
+    @Test
     fun findByUuid_returns_entity() {
         val itemEntity: ItemEntity = entitySupport.itemEntity()
         val entity: ItemEntity? = itemRepository.findByUuid(itemEntity.uuid)
