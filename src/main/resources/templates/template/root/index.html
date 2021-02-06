@@ -14,23 +14,114 @@
                         <div th:class="|my-4|"
                              th:v-bind:key="item.uuid"
                              th:v-for="|item in itemList|">
-                            <span th:class="|text-gray-500 text-xs|"
-                                  th:text="|{{item.writtenDate}}|"></span>
-                            <p th:text="|{{item.body}}|"></p>
+                            <div th:class="|relative|"
+                                 th:v-if="|item.mode === 'default'|">
+                                <span th:class="|text-gray-500 text-xs|"
+                                      th:text="|{{item.writtenDate}}|"></span>
+                                <p th:text="|{{item.body}}|"></p>
+                                <div th:class="|absolute right-1 top-0|">
+                                    <button th:class="|focus:outline-none h-8 px-2 rounded text-gray-500 w-8|"
+                                            th:type="|button|"
+                                            th:v-on:click="|changeModeToModify($event, item)|">
+                                        <svg th:fill="|none|"
+                                             th:stroke="|currentColor|"
+                                             th:viewBox="|0 0 24 24|"
+                                             th:xmlns="|http://www.w3.org/2000/svg|">
+                                            <path th:d="|M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z|"
+                                                  th:stroke-linecap="|round|"
+                                                  th:stroke-linejoin="|round|"
+                                                  th:stroke-width="|2|"></path>
+                                        </svg>
+                                    </button>
+                                    <form th:class="|inline-block|"
+                                          th:method="|post|"
+                                          th:v-on:submit.prevent="|submitItemDelete($event, item)|">
+                                        <input th:name="${_csrf.parameterName}"
+                                               th:type="|hidden|"
+                                               th:value="${_csrf.token}">
+                                        <button th:class="|focus:outline-none h-8 px-2 rounded text-gray-500 w-8|"
+                                                th:type="|submit|">
+                                            <svg th:fill="|none|"
+                                                 th:stroke="|currentColor|"
+                                                 th:viewBox="|0 0 24 24|"
+                                                 th:xmlns="|http://www.w3.org/2000/svg|">
+                                                <path th:d="|M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16|"
+                                                      th:stroke-linecap="|round|"
+                                                      th:stroke-linejoin="|round|"
+                                                      th:stroke-width="|2|"></path>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div th:v-if="|item.mode === 'modify'|">
+                                <span th:class="|text-gray-500 text-xs|"
+                                      th:text="|{{item.writtenDate}}|"></span>
+                                <form th:class="|relative|"
+                                      th:method="|post|"
+                                      th:v-on:submit.prevent="|submitItemModify($event, item)|">
+                                    <input th:name="${_csrf.parameterName}"
+                                           th:type="|hidden|"
+                                           th:value="${_csrf.token}">
+                                    <textarea
+                                            th:class="|block border border-gray-300 focus:border-red-900 focus:outline-none h-16 px-4 py-1 resize-none rounded w-full|"
+                                            th:name="|body|"
+                                            th:v-model="|item.bodyModel|"
+                                            th:v-on:keyup.ctrl.enter.prevent="|submitItemModify($event, item)|"></textarea>
+                                    <div th:class="|absolute bottom-1 right-1|">
+                                        <button th:class="|focus:outline-none h-8 px-2 rounded text-red-900 w-8|"
+                                                th:type="|button|"
+                                                th:v-on:click="|changeModeToDefault($event, item)|">
+                                            <svg th:fill="|none|"
+                                                 th:stroke="|currentColor|"
+                                                 th:viewBox="|0 0 24 24|"
+                                                 th:xmlns="|http://www.w3.org/2000/svg|">
+                                                <path th:d="|M6 18L18 6M6 6l12 12|"
+                                                      th:stroke-linecap="|round|"
+                                                      th:stroke-linejoin="|round|"
+                                                      th:stroke-width="|2|"></path>
+                                            </svg>
+                                        </button>
+                                        <button th:class="|focus:outline-none h-8 px-2 rounded text-red-900 w-8|"
+                                                th:type="|submit|">
+                                            <svg th:fill="|none|"
+                                                 th:stroke="|currentColor|"
+                                                 th:viewBox="|0 0 24 24|"
+                                                 th:xmlns="|http://www.w3.org/2000/svg|">
+                                                <path th:d="|M9 5l7 7-7 7|"
+                                                      th:stroke-linecap="|round|"
+                                                      th:stroke-linejoin="|round|"
+                                                      th:stroke-width="|2|"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                    <form th:action="@{/api/item/create}"
-                          th:class="|relative|"
+                    <form th:class="|relative|"
                           th:method="|post|"
-                          th:v-on:submit.prevent="|onSubmit|">
+                          th:v-on:submit.prevent="|submitItemCreate|">
+                        <input th:name="${_csrf.parameterName}"
+                               th:type="|hidden|"
+                               th:value="${_csrf.token}">
                         <textarea
                                 th:class="|block border border-gray-300 focus:border-red-900 focus:outline-none h-20 px-4 py-1 resize-none rounded w-full|"
                                 th:name="|body|"
-                                th:v-model="|body|"
-                                th:v-on:keyup.ctrl.enter.prevent="|onSubmit|"></textarea>
-                        <button th:class="|absolute bg-red-900 bottom-1 focus:outline-none h-8 px-4 right-4 rounded text-gray-50 text-sm|"
-                                th:text="|投稿|"
-                                th:type="|submit|"></button>
+                                th:v-model="|bodyModel|"
+                                th:v-on:keyup.ctrl.enter.prevent="|submitItemCreate|"></textarea>
+                        <button th:class="|absolute bottom-1 focus:outline-none h-8 px-2 right-1 rounded text-red-900 w-8|"
+                                th:type="|submit|">
+                            <svg th:fill="|none|"
+                                 th:stroke="|currentColor|"
+                                 th:viewBox="|0 0 24 24|"
+                                 th:xmlns="|http://www.w3.org/2000/svg|">
+                                <path th:d="|M9 5l7 7-7 7|"
+                                      th:stroke-linecap="|round|"
+                                      th:stroke-linejoin="|round|"
+                                      th:stroke-width="|2|"></path>
+                            </svg>
+                        </button>
                     </form>
                 </div>
                 <div th:class="|pl-12 w-4/12|">
@@ -58,13 +149,20 @@
             ({
                 data() {
                     return {
-                        body: "",
+                        bodyModel: "",
                         itemList: [],
                         nounList: [],
                         size: 0,
                     };
                 },
                 methods: {
+                    changeModeToDefault(event, item) {
+                        item.bodyModel = item.body;
+                        item.mode = "default";
+                    },
+                    changeModeToModify(event, item) {
+                        item.mode = "modify";
+                    },
                     fetchInformation() {
                         fetch("/api/information")
                             .then((response) => {
@@ -81,16 +179,48 @@
                                 return response.json();
                             })
                             .then((response) => {
-                                this.itemList = response.body.itemList.reverse();
+                                this.itemList = response.body.itemList
+                                    .map((item) => {
+                                        return {
+                                            uuid: item.uuid,
+                                            body: item.body,
+                                            bodyModel: item.body,
+                                            mode: "default",
+                                            writtenDate: item.writtenDate,
+                                        };
+                                    })
+                                    .sort((a, b) => {
+                                        return Date.parse(a.writtenDate) - Date.parse(b.writtenDate);
+                                    });
                             });
                     },
-                    onSubmit(event) {
+                    submitItemCreate(event) {
                         fetch("/api/item/create", {
                             body: new FormData(event.target.closest("form")),
                             method: "post",
                         })
                             .then((response) => {
-                                this.body = "";
+                                this.bodyModel = "";
+                                this.fetchInformation();
+                                this.fetchItemList();
+                            });
+                    },
+                    submitItemDelete(event, item) {
+                        fetch(`/api/item/${item.uuid}/delete`, {
+                            body: new FormData(event.target.closest("form")),
+                            method: "post",
+                        })
+                            .then((response) => {
+                                this.fetchInformation();
+                                this.fetchItemList();
+                            });
+                    },
+                    submitItemModify(event, item) {
+                        fetch(`/api/item/${item.uuid}/modify`, {
+                            body: new FormData(event.target.closest("form")),
+                            method: "post",
+                        })
+                            .then((response) => {
                                 this.fetchInformation();
                                 this.fetchItemList();
                             });
