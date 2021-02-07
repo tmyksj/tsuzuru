@@ -1,0 +1,208 @@
+<main th:class="|mt-16 mx-auto w-11/12|"
+      xmlns:th="http://www.thymeleaf.org">
+    <div th:class="|bottom-2 fixed left-0 right-0 top-32|">
+        <div th:class="|flex h-full mx-auto w-11/12|">
+            <div th:class="|w-8/12|">
+                <div th:class="|my-4|">
+                    <span th:class="|block text-lg|"
+                          th:text="|投稿数（日別）|"></span>
+                    <div th:class="|text-red-900|">
+                        <svg th:fill="|none|"
+                             th:stroke="|currentColor|"
+                             th:v-bind:view-box.camel="|viewBox|"
+                             th:xmlns="|http://www.w3.org/2000/svg|">
+                            <path th:stroke-linecap="|round|"
+                                  th:stroke-linejoin="|round|"
+                                  th:stroke-width="|1|"
+                                  th:v-bind:d="|d3.daySize.path.d|"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div th:class="|my-4|">
+                    <span th:class="|block text-lg|"
+                          th:text="|単語数（日別）|"></span>
+                    <div th:class="|text-red-900|">
+                        <svg th:fill="|none|"
+                             th:stroke="|currentColor|"
+                             th:v-bind:view-box.camel="|viewBox|"
+                             th:xmlns="|http://www.w3.org/2000/svg|">
+                            <path th:stroke-linecap="|round|"
+                                  th:stroke-linejoin="|round|"
+                                  th:stroke-width="|1|"
+                                  th:v-bind:d="|d3.dayNoun.path.d|"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div th:class="|my-4|">
+                    <span th:class="|block text-lg|"
+                          th:text="|単語（累計）|"></span>
+                    <div th:class="|text-red-900|">
+                        <svg th:fill="|none|"
+                             th:stroke="|currentColor|"
+                             th:v-bind:view-box.camel="|viewBox|"
+                             th:xmlns="|http://www.w3.org/2000/svg|">
+                            <rect th:v-bind:height="|rect.height|"
+                                  th:v-bind:key="|rect.key|"
+                                  th:v-bind:width="|rect.width|"
+                                  th:v-bind:x="|rect.x|"
+                                  th:v-bind:y="|rect.y|"
+                                  th:v-for="|rect in d3.noun.rectList|"></rect>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div th:class="|pl-12 w-4/12|">
+                <h2 th:class="|my-4 text-xl|"
+                    th:text="|詳細な解析|"></h2>
+                <div th:class="|my-4|">
+                    <form th:action="@{/analytics}"
+                          th:method="|get|"
+                          th:object="${form}">
+                        <input th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-5/12|"
+                               th:field="*{start}"
+                               th:type="|date|"
+                               th:v-on:change="|submit|">
+                        <span th:class="|inline-block text-center w-2/12|">
+                            <span th:class="|inline-block w-4|">
+                                <svg th:fill="|none|"
+                                     th:stroke="|currentColor|"
+                                     th:viewBox="|0 0 24 24|"
+                                     th:xmlns="|http://www.w3.org/2000/svg|">
+                                    <path th:d="|M13 5l7 7-7 7M5 5l7 7-7 7|"
+                                          th:stroke-linecap="|round|"
+                                          th:stroke-linejoin="|round|"
+                                          th:stroke-width="|2|"></path>
+                                </svg>
+                            </span>
+                        </span>
+                        <input th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-5/12|"
+                               th:field="*{endInclusive}"
+                               th:type="|date|"
+                               th:v-on:change="|submit|">
+                    </form>
+                </div>
+                <div th:class="|my-4|">
+                    <span th:class="|text-gray-500 text-xs|"
+                          th:text="|投稿数|"></span>
+                    <p th:text="|{{response.size}}|"></p>
+                </div>
+                <div th:class="|my-4|">
+                    <span th:class="|text-gray-500 text-xs|"
+                          th:text="|単語|"></span>
+                    <div>
+                        <span th:class="|pr-4|"
+                              th:text="|{{nounInfo.noun}}|"
+                              th:v-bind:key="|nounInfo.noun|"
+                              th:v-for="|nounInfo in response.nounInfoList|"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        ({
+            computed: {
+                viewBox() {
+                    return `0 0 ${this.svg.width} ${this.svg.height}`;
+                },
+            },
+            data() {
+                return {
+                    d3: {
+                        dayNoun: {
+                            path: {
+                                d: "",
+                            },
+                        },
+                        daySize: {
+                            path: {
+                                d: "",
+                            },
+                        },
+                        noun: {
+                            rectList: [],
+                        },
+                    },
+                    response: [[${response}]],
+                    svg: {
+                        height: 150,
+                        margin: 24,
+                        width: 1000,
+                    },
+                };
+            },
+            methods: {
+                renderDayNoun() {
+                    const data = this.response.dayList;
+                    const x = d3.scaleUtc()
+                        .domain(d3.extent(data, (d) => {
+                            return Date.parse(d.date);
+                        }))
+                        .range([this.svg.margin, this.svg.width - this.svg.margin]);
+                    const y = d3.scaleLinear()
+                        .domain([0, d3.max(data, (d) => {
+                            return d.nounInfoList.length;
+                        })])
+                        .range([this.svg.height - this.svg.margin, this.svg.margin]);
+                    const line = d3.line()
+                        .x((d) => {
+                            return x(Date.parse(d.date));
+                        })
+                        .y((d) => {
+                            return y(d.nounInfoList.length);
+                        });
+                    this.d3.dayNoun.path.d = line(data);
+                },
+                renderDaySize() {
+                    const data = this.response.dayList;
+                    const x = d3.scaleUtc()
+                        .domain(d3.extent(data, (d) => {
+                            return Date.parse(d.date);
+                        }))
+                        .range([this.svg.margin, this.svg.width - this.svg.margin]);
+                    const y = d3.scaleLinear()
+                        .domain([0, d3.max(data, (d) => {
+                            return d.size;
+                        })])
+                        .range([this.svg.height - this.svg.margin, this.svg.margin]);
+                    const line = d3.line()
+                        .x((d) => {
+                            return x(Date.parse(d.date));
+                        })
+                        .y((d) => {
+                            return y(d.size);
+                        });
+                    this.d3.daySize.path.d = line(data);
+                },
+                renderNoun() {
+                    const data = this.response.nounInfoList;
+                    const x = d3.scaleBand()
+                        .domain(d3.range(data.length))
+                        .range([this.svg.margin, this.svg.width - this.svg.margin]);
+                    const y = d3.scaleLinear()
+                        .domain([0, d3.max(data, (d) => {
+                            return d.size;
+                        })])
+                        .range([this.svg.height - this.svg.margin, this.svg.margin]);
+                    this.d3.noun.rectList = data.map((d, i) => {
+                        return {
+                            height: y(0) - y(d.size),
+                            key: d.noun,
+                            width: x.bandwidth(),
+                            x: x(i),
+                            y: y(d.size),
+                        };
+                    });
+                },
+                submit(event) {
+                    event.target.closest("form").submit();
+                },
+            },
+            mounted() {
+                this.renderDayNoun();
+                this.renderDaySize();
+                this.renderNoun();
+            },
+        });
+    </script>
+</main>
