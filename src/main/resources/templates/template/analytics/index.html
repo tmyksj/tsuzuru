@@ -7,47 +7,21 @@
                     <span th:class="|block text-lg|"
                           th:text="|投稿数（日別）|"></span>
                     <div th:class="|text-red-900|">
-                        <svg th:fill="|none|"
-                             th:stroke="|currentColor|"
-                             th:v-bind:view-box.camel="|viewBox|"
-                             th:xmlns="|http://www.w3.org/2000/svg|">
-                            <path th:stroke-linecap="|round|"
-                                  th:stroke-linejoin="|round|"
-                                  th:stroke-width="|1|"
-                                  th:v-bind:d="|d3.daySize.path.d|"></path>
-                        </svg>
+                        <div th:attr="ref=|daySize|"></div>
                     </div>
                 </div>
                 <div th:class="|my-4|">
                     <span th:class="|block text-lg|"
                           th:text="|単語数（日別）|"></span>
                     <div th:class="|text-red-900|">
-                        <svg th:fill="|none|"
-                             th:stroke="|currentColor|"
-                             th:v-bind:view-box.camel="|viewBox|"
-                             th:xmlns="|http://www.w3.org/2000/svg|">
-                            <path th:stroke-linecap="|round|"
-                                  th:stroke-linejoin="|round|"
-                                  th:stroke-width="|1|"
-                                  th:v-bind:d="|d3.dayNoun.path.d|"></path>
-                        </svg>
+                        <div th:attr="ref=|dayNoun|"></div>
                     </div>
                 </div>
                 <div th:class="|my-4|">
                     <span th:class="|block text-lg|"
                           th:text="|単語（累計）|"></span>
                     <div th:class="|text-red-900|">
-                        <svg th:fill="|none|"
-                             th:stroke="|currentColor|"
-                             th:v-bind:view-box.camel="|viewBox|"
-                             th:xmlns="|http://www.w3.org/2000/svg|">
-                            <rect th:v-bind:height="|rect.height|"
-                                  th:v-bind:key="|rect.key|"
-                                  th:v-bind:width="|rect.width|"
-                                  th:v-bind:x="|rect.x|"
-                                  th:v-bind:y="|rect.y|"
-                                  th:v-for="|rect in d3.noun.rectList|"></rect>
-                        </svg>
+                        <div th:attr="ref=|noun|"></div>
                     </div>
                 </div>
             </div>
@@ -101,98 +75,131 @@
     </div>
     <script th:inline="javascript">
         ({
-            computed: {
-                viewBox() {
-                    return `0 0 ${this.svg.width} ${this.svg.height}`;
-                },
-            },
             data() {
                 return {
-                    d3: {
-                        dayNoun: {
-                            path: {
-                                d: "",
-                            },
-                        },
-                        daySize: {
-                            path: {
-                                d: "",
-                            },
-                        },
-                        noun: {
-                            rectList: [],
-                        },
-                    },
                     response: [[${response}]],
-                    svg: {
-                        height: 150,
-                        margin: 24,
-                        width: 1000,
-                    },
                 };
             },
             methods: {
                 renderDayNoun() {
-                    const data = this.response.dayList;
-                    const x = d3.scaleUtc()
-                        .domain(d3.extent(data, (d) => {
-                            return Date.parse(d.date);
-                        }))
-                        .range([this.svg.margin, this.svg.width - this.svg.margin]);
-                    const y = d3.scaleLinear()
-                        .domain([0, d3.max(data, (d) => {
-                            return d.nounInfoList.length;
-                        })])
-                        .range([this.svg.height - this.svg.margin, this.svg.margin]);
-                    const line = d3.line()
-                        .x((d) => {
-                            return x(Date.parse(d.date));
-                        })
-                        .y((d) => {
-                            return y(d.nounInfoList.length);
-                        });
-                    this.d3.dayNoun.path.d = line(data);
+                    new ApexCharts(this.$refs.dayNoun, {
+                        chart: {
+                            height: 192,
+                            toolbar: {
+                                show: false,
+                            },
+                            type: "line",
+                            zoom: {
+                                enabled: false,
+                            },
+                        },
+                        colors: [
+                            "#7f1d1d",
+                        ],
+                        series: [
+                            {
+                                data: this.response.dayList.map((day) => {
+                                    return {
+                                        x: day.date,
+                                        y: day.nounInfoList.length,
+                                    };
+                                }),
+                                name: "",
+                            },
+                        ],
+                        xaxis: {
+                            tooltip: {
+                                enabled: false,
+                            },
+                            type: "datetime",
+                        },
+                        yaxis: {
+                            max: this.response.dayList.reduce((value, day) => {
+                                return Math.max(value, Math.ceil(1.1 * day.nounInfoList.length));
+                            }, 0),
+                            min: 0,
+                        },
+                    }).render();
                 },
                 renderDaySize() {
-                    const data = this.response.dayList;
-                    const x = d3.scaleUtc()
-                        .domain(d3.extent(data, (d) => {
-                            return Date.parse(d.date);
-                        }))
-                        .range([this.svg.margin, this.svg.width - this.svg.margin]);
-                    const y = d3.scaleLinear()
-                        .domain([0, d3.max(data, (d) => {
-                            return d.size;
-                        })])
-                        .range([this.svg.height - this.svg.margin, this.svg.margin]);
-                    const line = d3.line()
-                        .x((d) => {
-                            return x(Date.parse(d.date));
-                        })
-                        .y((d) => {
-                            return y(d.size);
-                        });
-                    this.d3.daySize.path.d = line(data);
+                    new ApexCharts(this.$refs.daySize, {
+                        chart: {
+                            height: 192,
+                            toolbar: {
+                                show: false,
+                            },
+                            type: "line",
+                            zoom: {
+                                enabled: false,
+                            },
+                        },
+                        colors: [
+                            "#7f1d1d",
+                        ],
+                        series: [
+                            {
+                                data: this.response.dayList.map((day) => {
+                                    return {
+                                        x: day.date,
+                                        y: day.size,
+                                    };
+                                }),
+                                name: "",
+                            },
+                        ],
+                        xaxis: {
+                            tooltip: {
+                                enabled: false,
+                            },
+                            type: "datetime",
+                        },
+                        yaxis: {
+                            max: this.response.dayList.reduce((value, day) => {
+                                return Math.max(value, Math.ceil(1.1 * day.size));
+                            }, 0),
+                            min: 0,
+                        },
+                    }).render();
                 },
                 renderNoun() {
-                    const data = this.response.nounInfoList;
-                    const x = d3.scaleBand()
-                        .domain(d3.range(data.length))
-                        .range([this.svg.margin, this.svg.width - this.svg.margin]);
-                    const y = d3.scaleLinear()
-                        .domain([0, d3.max(data, (d) => {
-                            return d.size;
-                        })])
-                        .range([this.svg.height - this.svg.margin, this.svg.margin]);
-                    this.d3.noun.rectList = data.map((d, i) => {
-                        return {
-                            height: y(0) - y(d.size),
-                            key: d.noun,
-                            width: x.bandwidth(),
-                            x: x(i),
-                            y: y(d.size),
-                        };
-                    });
+                    new ApexCharts(this.$refs.noun, {
+                        chart: {
+                            height: 192,
+                            toolbar: {
+                                show: false,
+                            },
+                            type: "bar",
+                            zoom: {
+                                enabled: false,
+                            },
+                        },
+                        colors: [
+                            "#7f1d1d",
+                        ],
+                        dataLabels: {
+                            enabled: false,
+                        },
+                        series: [
+                            {
+                                data: this.response.nounInfoList.map((nounInfo) => {
+                                    return {
+                                        x: nounInfo.noun,
+                                        y: nounInfo.size,
+                                    };
+                                }),
+                                name: "",
+                            },
+                        ],
+                        xaxis: {
+                            type: "category",
+                        },
+                        yaxis: {
+                            max: this.response.nounInfoList.reduce((value, nounInfo) => {
+                                return Math.max(value, Math.ceil(1.1 * nounInfo.size));
+                            }, 0),
+                            min: 0,
+                        },
+                    }).render();
                 },
                 submit(event) {
                     event.target.closest("form").submit();
