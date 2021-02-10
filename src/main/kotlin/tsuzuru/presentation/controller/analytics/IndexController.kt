@@ -24,6 +24,9 @@ class IndexController(
     ): Any {
         return Try {
             checkErrors(bindingResult)
+            if (form.start > form.endInclusive) {
+                throw BadRequestException()
+            }
 
             val response: UserGetsAnalyticsUseCase.Response = userGetsAnalyticsUseCase.perform(
                 UserGetsAnalyticsUseCase.Request(
