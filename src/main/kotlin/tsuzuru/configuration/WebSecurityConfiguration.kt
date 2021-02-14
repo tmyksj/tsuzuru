@@ -18,6 +18,7 @@ class WebSecurityConfiguration(
         http.authorizeRequests()
             .antMatchers("/").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/analytics/**").hasRole("USER")
             .antMatchers("/api/**").hasRole("USER")
             .antMatchers("/setting/**").hasRole("USER")
             .antMatchers("/sign-in").permitAll()
