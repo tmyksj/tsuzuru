@@ -25,6 +25,10 @@ class UserRepositoryImpl(
     private val tblUserRoleRepository: TblUserRoleRepository,
 ) : AbstractRepositoryImpl(), UserRepository {
 
+    override fun delete(entity: UserEntity) {
+        tblUserRepository.deleteById(entity.uuid.toString())
+    }
+
     override fun existsByRole(role: UserEntity.Role): Boolean {
         return tblUserRoleRepository.existsByIdEmUserRoleValue(role.toString())
     }

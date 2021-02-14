@@ -1,0 +1,215 @@
+<main th:class="|mt-16 mx-auto w-11/12|"
+      xmlns:th="http://www.thymeleaf.org">
+    <div th:class="|bottom-2 fixed left-0 right-0 top-32|">
+        <div th:class="|flex h-full mx-auto w-11/12|">
+            <div th:class="|w-8/12|">
+                <div th:class="|my-4|">
+                    <span th:class="|block text-lg|"
+                          th:text="|投稿数（日別）|"></span>
+                    <div th:class="|text-red-900|">
+                        <div th:attr="ref=|daySize|"></div>
+                    </div>
+                </div>
+                <div th:class="|my-4|">
+                    <span th:class="|block text-lg|"
+                          th:text="|単語数（日別）|"></span>
+                    <div th:class="|text-red-900|">
+                        <div th:attr="ref=|dayNoun|"></div>
+                    </div>
+                </div>
+                <div th:class="|my-4|">
+                    <span th:class="|block text-lg|"
+                          th:text="|単語（累計）|"></span>
+                    <div th:class="|text-red-900|">
+                        <div th:attr="ref=|noun|"></div>
+                    </div>
+                </div>
+            </div>
+            <div th:class="|pl-12 w-4/12|">
+                <h2 th:class="|my-4 text-xl|"
+                    th:text="|詳細な解析|"></h2>
+                <div th:class="|my-4|">
+                    <form th:action="@{/analytics}"
+                          th:method="|get|"
+                          th:object="${form}">
+                        <input th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-5/12|"
+                               th:field="*{start}"
+                               th:type="|date|"
+                               th:v-on:change="|submit|">
+                        <span th:class="|inline-block text-center w-2/12|">
+                            <span th:class="|inline-block w-4|">
+                                <svg th:fill="|none|"
+                                     th:stroke="|currentColor|"
+                                     th:viewBox="|0 0 24 24|"
+                                     th:xmlns="|http://www.w3.org/2000/svg|">
+                                    <path th:d="|M13 5l7 7-7 7M5 5l7 7-7 7|"
+                                          th:stroke-linecap="|round|"
+                                          th:stroke-linejoin="|round|"
+                                          th:stroke-width="|2|"></path>
+                                </svg>
+                            </span>
+                        </span>
+                        <input th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-5/12|"
+                               th:field="*{endInclusive}"
+                               th:type="|date|"
+                               th:v-on:change="|submit|">
+                    </form>
+                </div>
+                <div th:class="|my-4|">
+                    <span th:class="|text-gray-500 text-xs|"
+                          th:text="|投稿数|"></span>
+                    <p th:text="|{{response.size}}|"></p>
+                </div>
+                <div th:class="|my-4|">
+                    <span th:class="|text-gray-500 text-xs|"
+                          th:text="|単語|"></span>
+                    <div>
+                        <span th:class="|pr-4|"
+                              th:text="|{{nounInfo.noun}}|"
+                              th:v-bind:key="|nounInfo.noun|"
+                              th:v-for="|nounInfo in response.nounInfoList|"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        ({
+            data() {
+                return {
+                    response: [[${response}]],
+                };
+            },
+            methods: {
+                renderDayNoun() {
+                    new ApexCharts(this.$refs.dayNoun, {
+                        chart: {
+                            height: 192,
+                            toolbar: {
+                                show: false,
+                            },
+                            type: "line",
+                            zoom: {
+                                enabled: false,
+                            },
+                        },
+                        colors: [
+                            "#7f1d1d",
+                        ],
+                        series: [
+                            {
+                                data: this.response.dayList.map((day) => {
+                                    return {
+                                        x: day.date,
+                                        y: day.nounInfoList.length,
+                                    };
+                                }),
+                                name: "",
+                            },
+                        ],
+                        xaxis: {
+                            tooltip: {
+                                enabled: false,
+                            },
+                            type: "datetime",
+                        },
+                        yaxis: {
+                            max: this.response.dayList.reduce((value, day) => {
+                                return Math.max(value, Math.ceil(1.1 * day.nounInfoList.length));
+                            }, 0),
+                            min: 0,
+                        },
+                    }).render();
+                },
+                renderDaySize() {
+                    new ApexCharts(this.$refs.daySize, {
+                        chart: {
+                            height: 192,
+                            toolbar: {
+                                show: false,
+                            },
+                            type: "line",
+                            zoom: {
+                                enabled: false,
+                            },
+                        },
+                        colors: [
+                            "#7f1d1d",
+                        ],
+                        series: [
+                            {
+                                data: this.response.dayList.map((day) => {
+                                    return {
+                                        x: day.date,
+                                        y: day.size,
+                                    };
+                                }),
+                                name: "",
+                            },
+                        ],
+                        xaxis: {
+                            tooltip: {
+                                enabled: false,
+                            },
+                            type: "datetime",
+                        },
+                        yaxis: {
+                            max: this.response.dayList.reduce((value, day) => {
+                                return Math.max(value, Math.ceil(1.1 * day.size));
+                            }, 0),
+                            min: 0,
+                        },
+                    }).render();
+                },
+                renderNoun() {
+                    new ApexCharts(this.$refs.noun, {
+                        chart: {
+                            height: 192,
+                            toolbar: {
+                                show: false,
+                            },
+                            type: "bar",
+                            zoom: {
+                                enabled: false,
+                            },
+                        },
+                        colors: [
+                            "#7f1d1d",
+                        ],
+                        dataLabels: {
+                            enabled: false,
+                        },
+                        series: [
+                            {
+                                data: this.response.nounInfoList.map((nounInfo) => {
+                                    return {
+                                        x: nounInfo.noun,
+                                        y: nounInfo.size,
+                                    };
+                                }),
+                                name: "",
+                            },
+                        ],
+                        xaxis: {
+                            type: "category",
+                        },
+                        yaxis: {
+                            max: this.response.nounInfoList.reduce((value, nounInfo) => {
+                                return Math.max(value, Math.ceil(1.1 * nounInfo.size));
+                            }, 0),
+                            min: 0,
+                        },
+                    }).render();
+                },
+                submit(event) {
+                    event.target.closest("form").submit();
+                },
+            },
+            mounted() {
+                this.renderDayNoun();
+                this.renderDaySize();
+                this.renderNoun();
+            },
+        });
+    </script>
+</main>

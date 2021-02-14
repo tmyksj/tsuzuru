@@ -20,6 +20,15 @@ class UserRepositoryTests {
     private lateinit var entitySupport: EntitySupport
 
     @Test
+    fun delete_deletes_entity() {
+        val userEntity: UserEntity = entitySupport.userEntity()
+        userRepository.delete(userEntity)
+
+        val entity: UserEntity? = userRepository.findByUuid(userEntity.uuid)
+        Assertions.assertThat(entity).isNull()
+    }
+
+    @Test
     fun exists_returns_true() {
         val ret: Boolean = userRepository.existsByRole(entitySupport.userEntity().roleList.first())
         Assertions.assertThat(ret).isTrue

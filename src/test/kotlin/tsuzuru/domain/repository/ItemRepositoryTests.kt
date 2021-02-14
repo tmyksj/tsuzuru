@@ -20,6 +20,15 @@ class ItemRepositoryTests {
     private lateinit var entitySupport: EntitySupport
 
     @Test
+    fun delete_deletes_entity() {
+        val itemEntity: ItemEntity = entitySupport.itemEntity()
+        itemRepository.delete(itemEntity)
+
+        val entity: ItemEntity? = itemRepository.findByUuid(itemEntity.uuid)
+        Assertions.assertThat(entity).isNull()
+    }
+
+    @Test
     fun findAll_returns_entities() {
         val page: Page<ItemEntity> = itemRepository.findAll(Pageable(0, 10))
         Assertions.assertThat(page.entityList).hasSizeLessThanOrEqualTo(10)

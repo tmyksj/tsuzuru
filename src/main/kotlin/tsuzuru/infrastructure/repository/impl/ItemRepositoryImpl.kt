@@ -23,6 +23,10 @@ class ItemRepositoryImpl(
     private val userRepositoryImpl: UserRepositoryImpl,
 ) : AbstractRepositoryImpl(), ItemRepository {
 
+    override fun delete(entity: ItemEntity) {
+        tblItemRepository.deleteById(entity.uuid.toString())
+    }
+
     override fun findAll(pageable: Pageable): Page<ItemEntity> {
         return tblItemRepository.findAll(PageRequest.of(pageable.page, pageable.size)).toPage()
     }
