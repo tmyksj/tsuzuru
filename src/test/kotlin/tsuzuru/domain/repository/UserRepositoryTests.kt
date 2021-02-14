@@ -29,7 +29,7 @@ class UserRepositoryTests {
     }
 
     @Test
-    fun exists_returns_true() {
+    fun existsByRole_returns_true() {
         val ret: Boolean = userRepository.existsByRole(entitySupport.userEntity().roleList.first())
         Assertions.assertThat(ret).isTrue
     }
