@@ -12,7 +12,9 @@ class PrincipalSupport {
     private lateinit var entitySupport: EntitySupport
 
     fun principal(
-        userEntity: UserEntity = entitySupport.userEntity(),
+        userEntity: UserEntity = entitySupport.userEntity(
+            roleList = UserEntity.Role.values().toList(),
+        ),
     ): Principal {
         return Principal(
             userEntity = userEntity,
