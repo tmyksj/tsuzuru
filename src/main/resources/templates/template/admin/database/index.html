@@ -14,5 +14,8 @@
             </li>
         </ul>
     </div>
-    <div th:class="|h-full flex-1 overflow-y-scroll|"></div>
+    <div th:class="|h-full flex-1|">
+        <iframe th:class="|h-full w-full|"
+                th:src="@{/admin/proxy/phpmyadmin/}"></iframe>
+    </div>
 </main>
