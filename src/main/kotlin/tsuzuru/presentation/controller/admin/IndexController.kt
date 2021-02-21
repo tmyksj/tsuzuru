@@ -1,4 +1,4 @@
-package tsuzuru.presentation.controller.root
+package tsuzuru.presentation.controller.admin
 
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -10,14 +10,14 @@ import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 @Controller
 class IndexController : AbstractControllerImpl() {
 
-    @RequestMapping(method = [RequestMethod.GET], path = ["/"])
+    @RequestMapping(method = [RequestMethod.GET], path = ["/admin"])
     fun get(
         model: Model,
     ): Any {
         return view(
             model, HttpStatus.OK,
-            layout = "layout/default",
-            template = "template/root/index",
+            layout = "layout/admin",
+            template = "template/admin/index",
         )
     }
 
