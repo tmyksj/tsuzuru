@@ -6,7 +6,6 @@ import tsuzuru.infrastructure.jpa.repository.TblItemRepository
 import tsuzuru.infrastructure.jpa.repository.TblUserRepository
 import tsuzuru.useCase.AdminGetsStatisticsUseCase
 
-
 @Component
 @Transactional
 class AdminGetsStatisticsUseCaseImpl(
