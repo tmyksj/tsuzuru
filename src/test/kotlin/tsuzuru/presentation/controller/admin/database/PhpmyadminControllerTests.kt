@@ -1,4 +1,4 @@
-package tsuzuru.presentation.controller.admin.proxy
+package tsuzuru.presentation.controller.admin.database
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +21,7 @@ class PhpmyadminControllerTests {
     @Test
     fun get_responds_200() {
         controllerSupport.perform {
-            MockMvcRequestBuilders.get("/admin/proxy/phpmyadmin/")
+            MockMvcRequestBuilders.get("/admin/database/phpmyadmin/")
                 .with(SecurityMockMvcRequestPostProcessors.user(principalSupport.principal()))
         }.andExpect(MockMvcResultMatchers.status().isOk)
     }

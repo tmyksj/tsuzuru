@@ -1,4 +1,4 @@
-package tsuzuru.presentation.controller.admin.proxy
+package tsuzuru.presentation.controller.admin.database
 
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpHeaders
@@ -18,7 +18,7 @@ class PhpmyadminController(
     private val restTemplate: RestTemplate,
 ) {
 
-    @RequestMapping(method = [RequestMethod.GET, RequestMethod.POST], path = ["/admin/proxy/phpmyadmin/**"])
+    @RequestMapping(method = [RequestMethod.GET, RequestMethod.POST], path = ["/admin/database/phpmyadmin/**"])
     fun exchange(
         httpServletRequest: HttpServletRequest,
     ): Any {
@@ -49,7 +49,7 @@ class PhpmyadminController(
                 URI(
                     "http",
                     "phpmyadmin",
-                    httpServletRequest.requestURI.substring(23),
+                    httpServletRequest.requestURI.substring(26),
                     httpServletRequest.queryString,
                     null,
                 ),
