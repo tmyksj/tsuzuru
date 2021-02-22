@@ -14,5 +14,20 @@
             </li>
         </ul>
     </div>
-    <div th:class="|h-full flex-1 overflow-y-scroll|"></div>
+    <div th:class="|h-full flex-1 ml-8 overflow-y-scroll pt-8|">
+        <div th:class="flex">
+            <div th:class="|bg-white mb-8 mr-8 p-4 rounded-lg w-48|">
+                <h2 th:class="|text-gray-600|"
+                    th:text="|ユーザ数|"></h2>
+                <span th:class="|block mt-2 text-right text-xl|"
+                      th:text="${response.userSize}"></span>
+            </div>
+            <div th:class="|bg-white mb-8 mr-8 p-4 rounded-lg w-48|">
+                <h2 th:class="|text-gray-600|"
+                    th:text="|投稿数|"></h2>
+                <span th:class="|block mt-2 text-right text-xl|"
+                      th:text="${response.itemSize}"></span>
+            </div>
+        </div>
+    </div>
 </main>
