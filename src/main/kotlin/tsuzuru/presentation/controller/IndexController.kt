@@ -1,4 +1,4 @@
-package tsuzuru.presentation.controller.root
+package tsuzuru.presentation.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -17,7 +17,7 @@ class IndexController : AbstractControllerImpl() {
         return view(
             model, HttpStatus.OK,
             layout = "layout/default",
-            template = "template/root/index",
+            template = "template/index",
         )
     }
 

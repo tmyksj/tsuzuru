@@ -1,0 +1,33 @@
+<main th:class="|bottom-0 fixed flex left-0 right-0 top-16|"
+      xmlns:th="http://www.thymeleaf.org">
+    <div th:class="|h-full overflow-y-scroll w-72|">
+        <ul>
+            <li>
+                <a th:class="|hover:bg-gray-200 inline-block p-4 w-full|"
+                   th:href="@{/admin}"
+                   th:text="|ホーム|"></a>
+            </li>
+            <li>
+                <a th:class="|hover:bg-gray-200 inline-block p-4 w-full|"
+                   th:href="@{/admin/database}"
+                   th:text="|データベース|"></a>
+            </li>
+        </ul>
+    </div>
+    <div th:class="|h-full flex-1 ml-8 overflow-y-scroll pt-8|">
+        <div th:class="flex">
+            <div th:class="|bg-white mb-8 mr-8 p-4 rounded-lg w-48|">
+                <h2 th:class="|text-gray-600|"
+                    th:text="|ユーザ数|"></h2>
+                <span th:class="|block mt-2 text-right text-xl|"
+                      th:text="${response.userSize}"></span>
+            </div>
+            <div th:class="|bg-white mb-8 mr-8 p-4 rounded-lg w-48|">
+                <h2 th:class="|text-gray-600|"
+                    th:text="|投稿数|"></h2>
+                <span th:class="|block mt-2 text-right text-xl|"
+                      th:text="${response.itemSize}"></span>
+            </div>
+        </div>
+    </div>
+</main>

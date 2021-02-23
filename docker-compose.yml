@@ -16,3 +16,12 @@ services:
     image: "mariadb:10"
     volumes:
       - "./docker-compose/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro"
+  phpmyadmin:
+    environment:
+      PMA_HOST: "db"
+      PMA_PASSWORD: "my-secret-pw"
+      PMA_USER: "tsuzuru"
+      PMA_USER_CONFIG_BASE64: "PD9waHAKJGNmZ1snQWxsb3dUaGlyZFBhcnR5RnJhbWluZyddID0gdHJ1ZTsK"
+    expose:
+      - "80"
+    image: "phpmyadmin/phpmyadmin:5"
