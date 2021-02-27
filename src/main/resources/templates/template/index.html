@@ -10,7 +10,8 @@
         <div th:class="|bottom-2 fixed left-0 right-0 top-32|">
             <div th:class="|flex h-full mx-auto w-11/12|">
                 <div th:class="|flex flex-col w-8/12|">
-                    <div th:class="|flex-1 overflow-y-scroll|">
+                    <div th:attr="ref=|itemList|"
+                         th:class="|flex-1 overflow-y-scroll|">
                         <div th:class="|my-4|"
                              th:v-bind:key="item.uuid"
                              th:v-for="|item in itemList|">
@@ -178,7 +179,7 @@
                                 this.size = response.body.size;
                             });
                     },
-                    fetchItemList() {
+                    fetchItemList(options = {}) {
                         fetch("/api/item")
                             .then((response) => {
                                 return response.json();
@@ -197,6 +198,11 @@
                                     .sort((a, b) => {
                                         return Date.parse(a.writtenDate) - Date.parse(b.writtenDate);
                                     });
+                                if (options.scrollDown) {
+                                    this.$nextTick(() => {
+                                        this.$refs.itemList.lastElementChild?.scrollIntoView();
+                                    });
+                                }
                             });
                     },
                     submitItemCreate(event) {
@@ -207,7 +213,9 @@
                             .then((response) => {
                                 this.bodyModel = "";
                                 this.fetchInformation();
-                                this.fetchItemList();
+                                this.fetchItemList({
+                                    scrollDown: true,
+                                });
                             });
                     },
                     submitItemDelete(event, item) {
@@ -233,7 +241,9 @@
                 },
                 mounted() {
                     this.fetchInformation();
-                    this.fetchItemList();
+                    this.fetchItemList({
+                        scrollDown: true,
+                    });
                 },
             });
         </script>
