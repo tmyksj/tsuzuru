@@ -11,6 +11,8 @@ data class UserEntity(
     val name: String,
     val passwordEncrypted: String,
     val roleList: List<Role>,
+    val profileName: String,
+    val scope: Scope,
 ) : AbstractEntity() {
 
     fun modifyName(name: String): UserEntity {
@@ -27,9 +29,22 @@ data class UserEntity(
         }
     }
 
+    fun modifyProfileName(profileName: String): UserEntity {
+        return copy(profileName = profileName)
+    }
+
+    fun modifyScope(scope: Scope): UserEntity {
+        return copy(scope = scope)
+    }
+
     enum class Role {
         Admin,
         User,
+    }
+
+    enum class Scope {
+        Private,
+        Public,
     }
 
     class PasswordMustMatchException : DomainException()
@@ -42,6 +57,8 @@ data class UserEntity(
             passwordEncrypted: String? = null,
             passwordRaw: String? = null,
             roleList: List<Role> = listOf(Role.User),
+            profileName: String = name,
+            scope: Scope = Scope.Private,
         ): UserEntity {
             val passwordEncoder: PasswordEncoder = BeanSupport.getBean(PasswordEncoder::class)
 
@@ -54,6 +71,8 @@ data class UserEntity(
                 name = name,
                 passwordEncrypted = passwordEncrypted ?: passwordEncoder.encode(passwordRaw),
                 roleList = roleList,
+                profileName = profileName,
+                scope = scope,
             )
         }
 

@@ -39,6 +39,8 @@ class EntitySupport {
         name: String = UUID.randomUUID().toString(),
         passwordRaw: String = "passwordRaw",
         roleList: List<UserEntity.Role> = listOf(UserEntity.Role.User),
+        profileName: String = UUID.randomUUID().toString(),
+        scope: UserEntity.Scope = UserEntity.Scope.Private,
     ): UserEntity {
         return userRepository.save(
             UserEntity.build(
@@ -46,6 +48,8 @@ class EntitySupport {
                 name = name,
                 passwordRaw = passwordRaw,
                 roleList = roleList,
+                profileName = profileName,
+                scope = scope,
             )
         )
     }
