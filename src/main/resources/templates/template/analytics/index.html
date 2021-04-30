@@ -65,9 +65,9 @@
                           th:text="|単語|"></span>
                     <div>
                         <span th:class="|pr-4|"
-                              th:text="|{{nounInfo.noun}}|"
-                              th:v-bind:key="|nounInfo.noun|"
-                              th:v-for="|nounInfo in response.nounInfoList|"></span>
+                              th:text="|{{noun.value}}|"
+                              th:v-bind:key="|noun.value|"
+                              th:v-for="|noun in response.nounList|"></span>
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                                 data: this.response.dayList.map((day) => {
                                     return {
                                         x: day.date,
-                                        y: day.nounInfoList.length,
+                                        y: day.nounList.length,
                                     };
                                 }),
                                 name: "",
@@ -115,7 +115,7 @@
                         },
                         yaxis: {
                             max: this.response.dayList.reduce((value, day) => {
-                                return Math.max(value, Math.ceil(1.1 * day.nounInfoList.length));
+                                return Math.max(value, Math.ceil(1.1 * day.nounList.length));
                             }, 0),
                             min: 0,
                         },
@@ -181,10 +181,10 @@
                         },
                         series: [
                             {
-                                data: this.response.nounInfoList.map((nounInfo) => {
+                                data: this.response.nounList.map((noun) => {
                                     return {
-                                        x: nounInfo.noun,
-                                        y: nounInfo.size,
+                                        x: noun.value,
+                                        y: noun.size,
                                     };
                                 }),
                                 name: "",
@@ -194,8 +194,8 @@
                             type: "category",
                         },
                         yaxis: {
-                            max: this.response.nounInfoList.reduce((value, nounInfo) => {
-                                return Math.max(value, Math.ceil(1.1 * nounInfo.size));
+                            max: this.response.nounList.reduce((value, noun) => {
+                                return Math.max(value, Math.ceil(1.1 * noun.size));
                             }, 0),
                             min: 0,
                         },

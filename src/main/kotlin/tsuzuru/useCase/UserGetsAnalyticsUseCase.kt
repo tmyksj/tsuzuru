@@ -12,18 +12,18 @@ interface UserGetsAnalyticsUseCase
 
     class Response(
         val dayList: List<Day>,
-        val nounInfoList: List<NounInfo>,
+        val nounList: List<Noun>,
         val size: Int,
     ) : UseCase.Response
 
     data class Day(
         val date: LocalDate,
-        val nounInfoList: List<NounInfo>,
+        val nounList: List<Noun>,
         val size: Int,
     )
 
-    data class NounInfo(
-        val noun: String,
+    data class Noun(
+        val value: String,
         val size: Int,
     )
 

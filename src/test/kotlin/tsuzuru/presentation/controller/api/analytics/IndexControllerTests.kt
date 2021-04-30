@@ -1,4 +1,4 @@
-package tsuzuru.presentation.controller.api.information
+package tsuzuru.presentation.controller.api.analytics
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +21,7 @@ class IndexControllerTests {
     @Test
     fun get_responds_200() {
         controllerSupport.perform {
-            MockMvcRequestBuilders.get("/api/information")
+            MockMvcRequestBuilders.get("/api/analytics")
                 .with(SecurityMockMvcRequestPostProcessors.user(principalSupport.principal()))
         }.andExpect(MockMvcResultMatchers.status().isOk)
     }

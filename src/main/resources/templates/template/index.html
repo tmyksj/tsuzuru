@@ -138,8 +138,8 @@
                               th:text="|単語|"></span>
                         <div>
                             <span th:class="|pr-4|"
-                                  th:text="|{{noun}}|"
-                                  th:v-bind:key="noun"
+                                  th:text="|{{noun.value}}|"
+                                  th:v-bind:key="noun.value"
                                   th:v-for="|noun in nounList|"></span>
                         </div>
                     </div>
@@ -169,8 +169,8 @@
                     changeModeToModify(event, item) {
                         item.mode = "modify";
                     },
-                    fetchInformation() {
-                        fetch("/api/information")
+                    fetchAnalytics() {
+                        fetch("/api/analytics")
                             .then((response) => {
                                 return response.json();
                             })
@@ -212,7 +212,7 @@
                         })
                             .then((response) => {
                                 this.bodyModel = "";
-                                this.fetchInformation();
+                                this.fetchAnalytics();
                                 this.fetchItemList({
                                     scrollDown: true,
                                 });
@@ -224,7 +224,7 @@
                             method: "post",
                         })
                             .then((response) => {
-                                this.fetchInformation();
+                                this.fetchAnalytics();
                                 this.fetchItemList();
                             });
                     },
@@ -234,13 +234,13 @@
                             method: "post",
                         })
                             .then((response) => {
-                                this.fetchInformation();
+                                this.fetchAnalytics();
                                 this.fetchItemList();
                             });
                     },
                 },
                 mounted() {
-                    this.fetchInformation();
+                    this.fetchAnalytics();
                     this.fetchItemList({
                         scrollDown: true,
                     });
