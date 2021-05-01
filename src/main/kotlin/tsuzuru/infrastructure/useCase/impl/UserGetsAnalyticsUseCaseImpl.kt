@@ -35,10 +35,10 @@ class UserGetsAnalyticsUseCaseImpl(
                 ).toDomainEntity()
         }
 
-        val withNounList: List<Pair<ItemEntity, List<String>>> = itemEntityList
+        val nounList: List<Pair<ItemEntity, List<String>>> = itemEntityList
             .map { Pair(it, morphologicalAnalysisService.pickNoun(it.body)) }
 
-        val dayMap: Map<LocalDate, List<Pair<ItemEntity, List<String>>>> = withNounList
+        val dayMap: Map<LocalDate, List<Pair<ItemEntity, List<String>>>> = nounList
             .groupBy { it.first.writtenDate.toLocalDate() }
 
         val dayList: List<UserGetsAnalyticsUseCase.Day> = request.range.start
@@ -46,26 +46,26 @@ class UserGetsAnalyticsUseCaseImpl(
             .map {
                 UserGetsAnalyticsUseCase.Day(
                     date = it,
-                    nounInfoList = dayMap[it]?.toNounList() ?: listOf(),
+                    nounList = dayMap[it]?.format() ?: listOf(),
                     size = dayMap[it]?.size ?: 0,
                 )
             }
 
         return UserGetsAnalyticsUseCase.Response(
             dayList = dayList,
-            nounInfoList = withNounList.toNounList(),
+            nounList = nounList.format(),
             size = itemEntityList.size,
         )
     }
 
-    private fun List<Pair<ItemEntity, List<String>>>.toNounList(): List<UserGetsAnalyticsUseCase.NounInfo> {
+    private fun List<Pair<ItemEntity, List<String>>>.format(): List<UserGetsAnalyticsUseCase.Noun> {
         return flatMap { it.second }
             .groupBy { it }
             .values
             .sortedByDescending { it.size }
             .map {
-                UserGetsAnalyticsUseCase.NounInfo(
-                    noun = it.first(),
+                UserGetsAnalyticsUseCase.Noun(
+                    value = it.first(),
                     size = it.size,
                 )
             }

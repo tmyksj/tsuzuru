@@ -16,7 +16,7 @@ services:
     image: "mariadb:10"
     volumes:
       - "./docker-compose/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro"
-  phpmyadmin:
+  db-manager:
     environment:
       PMA_HOST: "db"
       PMA_PASSWORD: "my-secret-pw"

@@ -14,11 +14,11 @@ import java.net.URI
 import javax.servlet.http.HttpServletRequest
 
 @Controller
-class PhpmyadminController(
+class ManagerController(
     private val restTemplate: RestTemplate,
 ) {
 
-    @RequestMapping(method = [RequestMethod.GET, RequestMethod.POST], path = ["/admin/database/phpmyadmin/**"])
+    @RequestMapping(method = [RequestMethod.GET, RequestMethod.POST], path = ["/admin/database/manager/**"])
     fun exchange(
         httpServletRequest: HttpServletRequest,
     ): Any {
@@ -48,8 +48,8 @@ class PhpmyadminController(
                 HttpMethod.resolve(httpServletRequest.method),
                 URI(
                     "http",
-                    "phpmyadmin",
-                    httpServletRequest.requestURI.substring(26),
+                    "db-manager",
+                    httpServletRequest.requestURI.substring(23),
                     httpServletRequest.queryString,
                     null,
                 ),

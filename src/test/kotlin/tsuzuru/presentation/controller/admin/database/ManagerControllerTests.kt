@@ -1,4 +1,4 @@
-package tsuzuru.presentation.controller.api.information
+package tsuzuru.presentation.controller.admin.database
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,7 +10,7 @@ import tsuzuru.test.ControllerSupport
 import tsuzuru.test.PrincipalSupport
 
 @SpringBootTest
-class IndexControllerTests {
+class ManagerControllerTests {
 
     @Autowired
     private lateinit var controllerSupport: ControllerSupport
@@ -19,9 +19,9 @@ class IndexControllerTests {
     private lateinit var principalSupport: PrincipalSupport
 
     @Test
-    fun get_responds_200() {
+    fun exchange_responds_200() {
         controllerSupport.perform {
-            MockMvcRequestBuilders.get("/api/information")
+            MockMvcRequestBuilders.get("/admin/database/manager/")
                 .with(SecurityMockMvcRequestPostProcessors.user(principalSupport.principal()))
         }.andExpect(MockMvcResultMatchers.status().isOk)
     }
