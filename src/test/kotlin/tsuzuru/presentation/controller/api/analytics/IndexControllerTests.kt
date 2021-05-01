@@ -1,4 +1,4 @@
-package tsuzuru.presentation.controller.admin.database
+package tsuzuru.presentation.controller.api.analytics
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,7 +10,7 @@ import tsuzuru.test.ControllerSupport
 import tsuzuru.test.PrincipalSupport
 
 @SpringBootTest
-class PhpmyadminControllerTests {
+class IndexControllerTests {
 
     @Autowired
     private lateinit var controllerSupport: ControllerSupport
@@ -21,7 +21,7 @@ class PhpmyadminControllerTests {
     @Test
     fun get_responds_200() {
         controllerSupport.perform {
-            MockMvcRequestBuilders.get("/admin/database/phpmyadmin/")
+            MockMvcRequestBuilders.get("/api/analytics")
                 .with(SecurityMockMvcRequestPostProcessors.user(principalSupport.principal()))
         }.andExpect(MockMvcResultMatchers.status().isOk)
     }
