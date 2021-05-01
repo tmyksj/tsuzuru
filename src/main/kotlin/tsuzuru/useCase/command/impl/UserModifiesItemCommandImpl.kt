@@ -1,4 +1,4 @@
-package tsuzuru.useCase.impl
+package tsuzuru.useCase.command.impl
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -6,28 +6,30 @@ import tsuzuru.domain.entity.ItemEntity
 import tsuzuru.domain.repository.ItemRepository
 import tsuzuru.security.principal.Principal
 import tsuzuru.security.service.SecurityService
-import tsuzuru.useCase.UserDeletesItemUseCase
+import tsuzuru.useCase.command.UserModifiesItemCommand
 
 @Component
 @Transactional
-class UserDeletesItemUseCaseImpl(
+class UserModifiesItemCommandImpl(
     private val itemRepository: ItemRepository,
     private val securityService: SecurityService,
-) : UserDeletesItemUseCase {
+) : UserModifiesItemCommand {
 
     override fun perform(
-        request: UserDeletesItemUseCase.Request,
-    ): UserDeletesItemUseCase.Response {
+        request: UserModifiesItemCommand.Request,
+    ): UserModifiesItemCommand.Response {
         val principal: Principal = securityService.principal()
 
         val itemEntity: ItemEntity? = itemRepository.findByUuid(request.uuid)
         if (itemEntity == null || itemEntity.userEntity != principal.userEntity) {
-            throw UserDeletesItemUseCase.ItemIsNotFoundException()
+            throw UserModifiesItemCommand.ItemIsNotFoundException()
         }
 
-        itemRepository.delete(itemEntity)
+        itemRepository.save(
+            itemEntity.modifyBody(request.body)
+        )
 
-        return UserDeletesItemUseCase.Response()
+        return UserModifiesItemCommand.Response()
     }
 
 }

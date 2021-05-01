@@ -1,20 +1,20 @@
-package tsuzuru.useCase
+package tsuzuru.useCase.query
 
-import tsuzuru.common.useCase.UseCase
+import tsuzuru.common.useCase.query.AbstractQuery
 import java.time.LocalDateTime
 import java.util.*
 
-interface UserGetsItemsUseCase
-    : UseCase<UserGetsItemsUseCase.Request, UserGetsItemsUseCase.Response> {
+interface UserGetsItemsQuery
+    : AbstractQuery<UserGetsItemsQuery.Request, UserGetsItemsQuery.Response> {
 
     class Request(
         val page: LocalDateTime,
         val size: Int,
-    ) : UseCase.Request
+    ) : AbstractQuery.Request
 
     class Response(
         val itemList: List<Item>,
-    ) : UseCase.Response
+    ) : AbstractQuery.Response
 
     data class Item(
         val uuid: UUID,

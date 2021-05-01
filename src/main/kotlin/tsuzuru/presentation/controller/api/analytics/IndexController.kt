@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.api.analytics.IndexForm
-import tsuzuru.useCase.UserGetsAnalyticsUseCase
+import tsuzuru.useCase.query.UserGetsAnalyticsQuery
 
 @RestController
 class IndexController(
-    private val userGetsAnalyticsUseCase: UserGetsAnalyticsUseCase,
+    private val userGetsAnalyticsQuery: UserGetsAnalyticsQuery,
 ) : AbstractControllerImpl() {
 
     @RequestMapping(method = [RequestMethod.GET], path = ["/api/analytics"])
@@ -28,8 +28,8 @@ class IndexController(
                 throw BadRequestException()
             }
 
-            val response: UserGetsAnalyticsUseCase.Response = userGetsAnalyticsUseCase.perform(
-                UserGetsAnalyticsUseCase.Request(
+            val response: UserGetsAnalyticsQuery.Response = userGetsAnalyticsQuery.perform(
+                UserGetsAnalyticsQuery.Request(
                     range = form.start..form.endInclusive,
                 )
             )

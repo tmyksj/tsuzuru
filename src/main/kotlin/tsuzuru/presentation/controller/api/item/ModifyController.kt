@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.api.item.ModifyForm
-import tsuzuru.useCase.UserModifiesItemUseCase
+import tsuzuru.useCase.command.UserModifiesItemCommand
 import java.util.*
 
 @RestController
 class ModifyController(
-    private val userModifiesItemUseCase: UserModifiesItemUseCase,
+    private val userModifiesItemCommand: UserModifiesItemCommand,
 ) : AbstractControllerImpl() {
 
     @RequestMapping(method = [RequestMethod.POST], path = ["/api/item/{uuid}/modify"])
@@ -24,8 +24,8 @@ class ModifyController(
         return Try {
             checkErrors(bindingResult)
 
-            userModifiesItemUseCase.perform(
-                UserModifiesItemUseCase.Request(
+            userModifiesItemCommand.perform(
+                UserModifiesItemCommand.Request(
                     uuid = UUID.fromString(checkNotNull(form.uuid)),
                     body = checkNotNull(form.body),
                 )
@@ -34,7 +34,7 @@ class ModifyController(
             body(
                 HttpStatus.OK,
             )
-        }.catch(BadRequestException::class, UserModifiesItemUseCase.ItemIsNotFoundException::class) {
+        }.catch(BadRequestException::class, UserModifiesItemCommand.ItemIsNotFoundException::class) {
             body(
                 HttpStatus.BAD_REQUEST,
                 errorMessageList = listOf("不正なリクエストです。"),
