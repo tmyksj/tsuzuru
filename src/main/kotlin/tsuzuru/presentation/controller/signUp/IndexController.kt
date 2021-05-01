@@ -11,12 +11,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.signUp.IndexForm
 import tsuzuru.security.service.SecurityService
-import tsuzuru.useCase.GuestSignsUpUseCase
+import tsuzuru.useCase.command.GuestSignsUpCommand
 
 @Controller
 class IndexController(
     private val securityService: SecurityService,
-    private val guestSignsUpUseCase: GuestSignsUpUseCase,
+    private val guestSignsUpCommand: GuestSignsUpCommand,
 ) : AbstractControllerImpl() {
 
     @RequestMapping(method = [RequestMethod.GET], path = ["/sign-up"])
@@ -51,8 +51,8 @@ class IndexController(
         return Try {
             checkErrors(bindingResult)
 
-            guestSignsUpUseCase.perform(
-                GuestSignsUpUseCase.Request(
+            guestSignsUpCommand.perform(
+                GuestSignsUpCommand.Request(
                     name = checkNotNull(form.name),
                     passwordRaw = checkNotNull(form.password),
                 )
@@ -62,7 +62,7 @@ class IndexController(
                 redirectAttributes, "/sign-in",
                 informationMessageList = listOf("アカウントを作成しました。"),
             )
-        }.catch(BadRequestException::class, GuestSignsUpUseCase.NameIsAlreadyInUseException::class) {
+        }.catch(BadRequestException::class, GuestSignsUpCommand.NameIsAlreadyInUseException::class) {
             model.addAttribute("form", form)
 
             view(

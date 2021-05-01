@@ -1,20 +1,20 @@
-package tsuzuru.useCase.impl
+package tsuzuru.useCase.command.impl
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import tsuzuru.domain.entity.UserEntity
 import tsuzuru.domain.repository.UserRepository
-import tsuzuru.useCase.GuestSignsUpUseCase
+import tsuzuru.useCase.command.GuestSignsUpCommand
 
 @Component
 @Transactional
-class GuestSignsUpUseCaseImpl(
+class GuestSignsUpCommandImpl(
     private val userRepository: UserRepository,
-) : GuestSignsUpUseCase {
+) : GuestSignsUpCommand {
 
     override fun perform(
-        request: GuestSignsUpUseCase.Request,
-    ): GuestSignsUpUseCase.Response {
+        request: GuestSignsUpCommand.Request,
+    ): GuestSignsUpCommand.Response {
         try {
             val userEntity: UserEntity = UserEntity.build(
                 name = request.name,
@@ -23,9 +23,9 @@ class GuestSignsUpUseCaseImpl(
 
             userRepository.save(userEntity)
 
-            return GuestSignsUpUseCase.Response()
+            return GuestSignsUpCommand.Response()
         } catch (e: UserRepository.NameMustBeUniqueException) {
-            throw GuestSignsUpUseCase.NameIsAlreadyInUseException()
+            throw GuestSignsUpCommand.NameIsAlreadyInUseException()
         }
     }
 

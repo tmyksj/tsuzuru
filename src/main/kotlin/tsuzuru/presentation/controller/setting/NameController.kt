@@ -11,11 +11,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.setting.NameForm
 import tsuzuru.presentation.form.setting.PasswordForm
-import tsuzuru.useCase.UserModifiesNameUseCase
+import tsuzuru.useCase.command.UserModifiesNameCommand
 
 @Controller
 class NameController(
-    private val userModifiesNameUseCase: UserModifiesNameUseCase,
+    private val userModifiesNameCommand: UserModifiesNameCommand,
 ) : AbstractControllerImpl() {
 
     @RequestMapping(method = [RequestMethod.POST], path = ["/setting/name"])
@@ -28,8 +28,8 @@ class NameController(
         return Try {
             checkErrors(bindingResult)
 
-            userModifiesNameUseCase.perform(
-                UserModifiesNameUseCase.Request(
+            userModifiesNameCommand.perform(
+                UserModifiesNameCommand.Request(
                     name = checkNotNull(nameForm.name),
                 )
             )
@@ -38,7 +38,7 @@ class NameController(
                 redirectAttributes, "/setting",
                 informationMessageList = listOf("ユーザ名を変更しました。"),
             )
-        }.catch(BadRequestException::class, UserModifiesNameUseCase.NameIsAlreadyInUseException::class) {
+        }.catch(BadRequestException::class, UserModifiesNameCommand.NameIsAlreadyInUseException::class) {
             model.addAttribute("nameForm", nameForm)
             model.addAttribute("passwordForm", PasswordForm())
 

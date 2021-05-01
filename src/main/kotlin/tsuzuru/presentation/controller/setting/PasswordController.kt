@@ -13,12 +13,12 @@ import tsuzuru.presentation.form.setting.NameForm
 import tsuzuru.presentation.form.setting.PasswordForm
 import tsuzuru.security.principal.Principal
 import tsuzuru.security.service.SecurityService
-import tsuzuru.useCase.UserModifiesPasswordUseCase
+import tsuzuru.useCase.command.UserModifiesPasswordCommand
 
 @Controller
 class PasswordController(
     private val securityService: SecurityService,
-    private val userModifiesPasswordUseCase: UserModifiesPasswordUseCase,
+    private val userModifiesPasswordCommand: UserModifiesPasswordCommand,
 ) : AbstractControllerImpl() {
 
     @RequestMapping(method = [RequestMethod.POST], path = ["/setting/password"])
@@ -31,8 +31,8 @@ class PasswordController(
         return Try {
             checkErrors(bindingResult)
 
-            userModifiesPasswordUseCase.perform(
-                UserModifiesPasswordUseCase.Request(
+            userModifiesPasswordCommand.perform(
+                UserModifiesPasswordCommand.Request(
                     currentPasswordRaw = checkNotNull(passwordForm.currentPassword),
                     newPasswordRaw = checkNotNull(passwordForm.newPassword),
                 )
@@ -42,7 +42,7 @@ class PasswordController(
                 redirectAttributes, "/setting",
                 informationMessageList = listOf("パスワードを変更しました。"),
             )
-        }.catch(BadRequestException::class, UserModifiesPasswordUseCase.PasswordMismatchesException::class) {
+        }.catch(BadRequestException::class, UserModifiesPasswordCommand.PasswordMismatchesException::class) {
             val principal: Principal = securityService.principal()
 
             model.addAttribute("nameForm", NameForm(name = principal.userEntity.name))

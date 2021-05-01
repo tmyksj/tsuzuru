@@ -1,4 +1,4 @@
-package tsuzuru.useCase.impl
+package tsuzuru.useCase.command.impl
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -6,18 +6,18 @@ import tsuzuru.domain.entity.ItemEntity
 import tsuzuru.domain.repository.ItemRepository
 import tsuzuru.security.principal.Principal
 import tsuzuru.security.service.SecurityService
-import tsuzuru.useCase.UserCreatesItemUseCase
+import tsuzuru.useCase.command.UserCreatesItemCommand
 
 @Component
 @Transactional
-class UserCreatesItemUseCaseImpl(
+class UserCreatesItemCommandImpl(
     private val itemRepository: ItemRepository,
     private val securityService: SecurityService,
-) : UserCreatesItemUseCase {
+) : UserCreatesItemCommand {
 
     override fun perform(
-        request: UserCreatesItemUseCase.Request,
-    ): UserCreatesItemUseCase.Response {
+        request: UserCreatesItemCommand.Request,
+    ): UserCreatesItemCommand.Response {
         val principal: Principal = securityService.principal()
 
         val itemEntity: ItemEntity = ItemEntity.build(
@@ -27,7 +27,7 @@ class UserCreatesItemUseCaseImpl(
 
         itemRepository.save(itemEntity)
 
-        return UserCreatesItemUseCase.Response()
+        return UserCreatesItemCommand.Response()
     }
 
 }

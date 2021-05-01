@@ -1,4 +1,4 @@
-package tsuzuru.useCase.impl
+package tsuzuru.useCase.command.impl
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -6,30 +6,29 @@ import tsuzuru.domain.entity.UserEntity
 import tsuzuru.domain.repository.UserRepository
 import tsuzuru.security.principal.Principal
 import tsuzuru.security.service.SecurityService
-import tsuzuru.useCase.UserModifiesPasswordUseCase
+import tsuzuru.useCase.command.UserModifiesNameCommand
 
 @Component
 @Transactional
-class UserModifiesPasswordUseCaseImpl(
+class UserModifiesNameCommandImpl(
     private val userRepository: UserRepository,
     private val securityService: SecurityService,
-) : UserModifiesPasswordUseCase {
+) : UserModifiesNameCommand {
 
     override fun perform(
-        request: UserModifiesPasswordUseCase.Request,
-    ): UserModifiesPasswordUseCase.Response {
+        request: UserModifiesNameCommand.Request,
+    ): UserModifiesNameCommand.Response {
         try {
             val principal: Principal = securityService.principal()
 
-            val userEntity: UserEntity = principal.userEntity
-                .modifyPassword(request.currentPasswordRaw, request.newPasswordRaw)
+            val userEntity: UserEntity = principal.userEntity.modifyName(request.name)
             userRepository.save(userEntity)
 
             securityService.reloadPrincipal()
 
-            return UserModifiesPasswordUseCase.Response()
-        } catch (e: UserEntity.PasswordMustMatchException) {
-            throw UserModifiesPasswordUseCase.PasswordMismatchesException()
+            return UserModifiesNameCommand.Response()
+        } catch (e: UserRepository.NameMustBeUniqueException) {
+            throw UserModifiesNameCommand.NameIsAlreadyInUseException()
         }
     }
 
