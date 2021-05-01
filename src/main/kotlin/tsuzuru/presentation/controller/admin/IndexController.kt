@@ -6,19 +6,19 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
-import tsuzuru.useCase.AdminGetsStatisticsUseCase
+import tsuzuru.useCase.query.AdminGetsStatisticsQuery
 
 @Controller
 class IndexController(
-    private val adminGetsStatisticsUseCase: AdminGetsStatisticsUseCase,
+    private val adminGetsStatisticsQuery: AdminGetsStatisticsQuery,
 ) : AbstractControllerImpl() {
 
     @RequestMapping(method = [RequestMethod.GET], path = ["/admin"])
     fun get(
         model: Model,
     ): Any {
-        val response: AdminGetsStatisticsUseCase.Response = adminGetsStatisticsUseCase.perform(
-            AdminGetsStatisticsUseCase.Request()
+        val response: AdminGetsStatisticsQuery.Response = adminGetsStatisticsQuery.perform(
+            AdminGetsStatisticsQuery.Request()
         )
 
         model.addAttribute("response", response)

@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.api.item.CreateForm
-import tsuzuru.useCase.UserCreatesItemUseCase
+import tsuzuru.useCase.command.UserCreatesItemCommand
 
 @RestController
 class CreateController(
-    private val userCreatesItemUseCase: UserCreatesItemUseCase,
+    private val userCreatesItemCommand: UserCreatesItemCommand,
 ) : AbstractControllerImpl() {
 
     @RequestMapping(method = [RequestMethod.POST], path = ["/api/item/create"])
@@ -23,8 +23,8 @@ class CreateController(
         return Try {
             checkErrors(bindingResult)
 
-            userCreatesItemUseCase.perform(
-                UserCreatesItemUseCase.Request(
+            userCreatesItemCommand.perform(
+                UserCreatesItemCommand.Request(
                     body = checkNotNull(form.body),
                 )
             )
