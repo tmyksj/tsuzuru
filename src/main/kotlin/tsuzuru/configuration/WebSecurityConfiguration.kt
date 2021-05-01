@@ -25,7 +25,7 @@ class WebSecurityConfiguration(
             .antMatchers("/sign-up").permitAll()
             .anyRequest().denyAll()
         http.csrf()
-            .ignoringAntMatchers("/admin/database/phpmyadmin/**")
+            .ignoringAntMatchers("/admin/database/manager/**")
         http.headers()
             .frameOptions().sameOrigin()
         http.formLogin()

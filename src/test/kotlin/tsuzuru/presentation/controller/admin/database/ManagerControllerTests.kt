@@ -10,7 +10,7 @@ import tsuzuru.test.ControllerSupport
 import tsuzuru.test.PrincipalSupport
 
 @SpringBootTest
-class PhpmyadminControllerTests {
+class ManagerControllerTests {
 
     @Autowired
     private lateinit var controllerSupport: ControllerSupport
@@ -19,9 +19,9 @@ class PhpmyadminControllerTests {
     private lateinit var principalSupport: PrincipalSupport
 
     @Test
-    fun get_responds_200() {
+    fun exchange_responds_200() {
         controllerSupport.perform {
-            MockMvcRequestBuilders.get("/admin/database/phpmyadmin/")
+            MockMvcRequestBuilders.get("/admin/database/manager/")
                 .with(SecurityMockMvcRequestPostProcessors.user(principalSupport.principal()))
         }.andExpect(MockMvcResultMatchers.status().isOk)
     }
