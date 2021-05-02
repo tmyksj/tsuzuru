@@ -1,0 +1,94 @@
+<main th:class="|mt-16 mx-auto w-11/12|"
+      xmlns:th="http://www.thymeleaf.org">
+    <div th:class="|bottom-2 fixed left-0 right-0 top-32|"
+         th:v-if="|status === '2xx'|">
+        <div th:class="|flex h-full mx-auto w-11/12|">
+            <div th:class="|pr-12 w-4/12|">
+                <div th:class="|mb-16|">
+                    <h2 th:class="|text-xl|"
+                        th:text="|{{profileName}}|"></h2>
+                    <span th:class="|text-gray-500 text-xs|"
+                          th:text="|{{name}}|"></span>
+                </div>
+                <h2 th:class="|my-2 text-xl|"
+                    th:text="|最近の活動|"></h2>
+                <div th:class="|my-2|">
+                    <span th:class="|text-gray-500 text-xs|"
+                          th:text="|投稿数|"></span>
+                    <p th:text="|{{analytics.size}}|"></p>
+                </div>
+                <div th:class="|my-2|">
+                    <span th:class="|text-gray-500 text-xs|"
+                          th:text="|単語|"></span>
+                    <div>
+                        <span th:class="|pr-4|"
+                              th:text="|{{noun.value}}|"
+                              th:v-bind:key="|noun.value|"
+                              th:v-for="|noun in analytics.nounList|"></span>
+                    </div>
+                </div>
+            </div>
+            <div th:attr="ref=|itemList|"
+                 th:class="|overflow-y-scroll w-8/12|">
+                <div th:class="|my-4|"
+                     th:v-bind:key="|Date.parse(item.writtenDate)|"
+                     th:v-for="|item in itemList|">
+                    <span th:class="|text-gray-500 text-xs|"
+                          th:text="|{{item.writtenDate}}|"></span>
+                    <p th:text="|{{item.body}}|"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:class="|bottom-2 fixed left-0 right-0 top-32|"
+         th:v-if="|status === '4xx'|">
+        <div th:class="|flex h-full mx-auto w-11/12|">
+            <p th:text="|ユーザが見つかりません。|"></p>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        ({
+            data() {
+                return {
+                    name: "",
+                    profileName: "",
+                    analytics: {
+                        nounList: [],
+                        size: 0,
+                    },
+                    itemList: [],
+                    status: null,
+                };
+            },
+            methods: {
+                fetchU() {
+                    fetch(`/api/u/${location.pathname.substring(3)}`)
+                        .then((response) => {
+                            return response.json();
+                        })
+                        .then((response) => {
+                            this.name = response.body.name;
+                            this.profileName = response.body.profileName;
+                            this.analytics.nounList = response.body.analytics.nounList;
+                            this.analytics.size = response.body.analytics.size;
+                            this.itemList = response.body.itemList
+                                .sort((a, b) => {
+                                    return Date.parse(a.writtenDate) - Date.parse(b.writtenDate);
+                                });
+                            this.status = "2xx";
+
+                            this.$nextTick(() => {
+                                this.$refs.itemList.lastElementChild?.scrollIntoView();
+                            });
+                        })
+                        .catch(() => {
+                            this.status = "4xx";
+                        });
+                },
+            },
+            mounted() {
+                this.fetchU();
+            },
+        });
+    </script>
+</main>
