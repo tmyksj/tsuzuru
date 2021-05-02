@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.setting.NameForm
 import tsuzuru.presentation.form.setting.PasswordForm
-import tsuzuru.security.principal.Principal
+import tsuzuru.presentation.form.setting.ProfileForm
 import tsuzuru.security.service.SecurityService
 
 @Controller
@@ -20,16 +20,28 @@ class IndexController(
     fun get(
         model: Model,
     ): Any {
-        val principal: Principal = securityService.principal()
-
-        model.addAttribute("nameForm", NameForm(name = principal.userEntity.name))
-        model.addAttribute("passwordForm", PasswordForm())
+        model.addAllForms()
 
         return view(
             model, HttpStatus.OK,
             layout = "layout/default",
             template = "template/setting/index",
         )
+    }
+
+    fun Model.addAllForms(
+        nameForm: NameForm = NameForm(
+            name = securityService.principal().userEntity.name,
+        ),
+        passwordForm: PasswordForm = PasswordForm(),
+        profileForm: ProfileForm = ProfileForm(
+            profileName = securityService.principal().userEntity.profileName,
+            scope = securityService.principal().userEntity.scope.toString(),
+        ),
+    ) {
+        addAttribute("nameForm", nameForm)
+        addAttribute("passwordForm", passwordForm)
+        addAttribute("profileForm", profileForm)
     }
 
 }

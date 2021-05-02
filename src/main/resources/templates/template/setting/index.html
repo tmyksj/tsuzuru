@@ -1,14 +1,16 @@
 <main th:class="|mt-16 mx-auto w-11/12|"
       xmlns:th="http://www.thymeleaf.org">
-    <div th:class="|flex|">
-        <div th:class="|mb-16 mr-8 w-96|">
+    <div th:class="|flex justify-center mb-8|">
+        <div th:class="|w-60|">
             <h2 th:class="|text-xl|"
-                th:text="|ユーザ名の変更|"></h2>
+                th:text="|アカウント|"></h2>
+        </div>
+        <div th:class="|w-96|">
             <form th:action="@{/setting/name}"
-                  th:class="|w-full|"
+                  th:class="|mb-8 w-full|"
                   th:method="|post|"
                   th:object="${nameForm}">
-                <div th:class="|mt-4|">
+                <div th:class="|mb-2|">
                     <label th:class="|block mb-1 text-gray-600 text-sm|"
                            th:for="|name|"
                            th:text="|ユーザ名|"></label>
@@ -17,21 +19,17 @@
                            th:field="*{name}"
                            th:type="|text|">
                 </div>
-                <div th:class="|mt-4 text-right|">
+                <div th:class="|mb-2 text-right|">
                     <button th:class="|bg-red-900 focus:outline-none h-9 px-4 py-1 rounded text-gray-50|"
                             th:text="|変更|"
                             th:type="|submit|"></button>
                 </div>
             </form>
-        </div>
-        <div th:class="|mb-16 mr-8 w-96|">
-            <h2 th:class="|text-xl|"
-                th:text="|パスワードの変更|"></h2>
             <form th:action="@{/setting/password}"
-                  th:class="|w-full|"
+                  th:class="|mb-8 w-full|"
                   th:method="|post|"
                   th:object="${passwordForm}">
-                <div th:class="|mt-4|">
+                <div th:class="|mb-2|">
                     <label th:class="|block mb-1 text-gray-600 text-sm|"
                            th:for="|currentPassword|"
                            th:text="|現在のパスワード|"></label>
@@ -40,7 +38,7 @@
                            th:field="*{currentPassword}"
                            th:type="|password|">
                 </div>
-                <div th:class="|mt-4|">
+                <div th:class="|mb-2|">
                     <label th:class="|block mb-1 text-gray-600 text-sm|"
                            th:for="|newPassword|"
                            th:text="|新しいパスワード|"></label>
@@ -49,7 +47,51 @@
                            th:field="*{newPassword}"
                            th:type="|password|">
                 </div>
-                <div th:class="|mt-4 text-right|">
+                <div th:class="|mb-2 text-right|">
+                    <button th:class="|bg-red-900 focus:outline-none h-9 px-4 py-1 rounded text-gray-50|"
+                            th:text="|変更|"
+                            th:type="|submit|"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:class="|flex justify-center mb-8|">
+        <div th:class="|w-60|">
+            <h2 th:class="|text-xl|"
+                th:text="|プロフィール|"></h2>
+        </div>
+        <div th:class="|w-96|">
+            <form th:action="@{/setting/profile}"
+                  th:class="|mb-8 w-full|"
+                  th:method="|post|"
+                  th:object="${profileForm}">
+                <div th:class="|mb-2|">
+                    <label th:class="|block mb-1 text-gray-600 text-sm|"
+                           th:for="|profileName|"
+                           th:text="|表示名|"></label>
+                    <input th:class="|border border-gray-300 focus:border-red-900 focus:outline-none h-9 px-4 py-1 rounded w-full|"
+                           th:field="*{profileName}"
+                           th:type="|text|">
+                </div>
+                <div th:class="|mb-2|">
+                    <span th:class="|block mb-1 text-gray-600 text-sm|"
+                          th:text="|公開設定|"></span>
+                    <label th:class="|inline-flex items-center mr-4|">
+                        <input th:class="|appearance-none border-4 border-gray-300 checked:border-red-900 h-4 mr-2 rounded-lg w-4|"
+                               th:field="*{scope}"
+                               th:type="|radio|"
+                               th:value="|Private|">
+                        <span th:text="|非公開|"></span>
+                    </label>
+                    <label th:class="|inline-flex items-center mr-4|">
+                        <input th:class="|appearance-none border-4 border-gray-300 checked:border-red-900 h-4 mr-2 rounded-lg w-4|"
+                               th:field="*{scope}"
+                               th:type="|radio|"
+                               th:value="|Public|">
+                        <span th:text="|公開|"></span>
+                    </label>
+                </div>
+                <div th:class="|mb-2 text-right|">
                     <button th:class="|bg-red-900 focus:outline-none h-9 px-4 py-1 rounded text-gray-50|"
                             th:text="|変更|"
                             th:type="|submit|"></button>
