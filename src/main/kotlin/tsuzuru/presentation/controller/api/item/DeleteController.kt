@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.api.item.DeleteForm
-import tsuzuru.useCase.UserDeletesItemUseCase
+import tsuzuru.useCase.command.UserDeletesItemCommand
 import java.util.*
 
 @RestController
 class DeleteController(
-    private val userDeletesItemUseCase: UserDeletesItemUseCase,
+    private val userDeletesItemCommand: UserDeletesItemCommand,
 ) : AbstractControllerImpl() {
 
     @RequestMapping(method = [RequestMethod.POST], path = ["/api/item/{uuid}/delete"])
@@ -24,8 +24,8 @@ class DeleteController(
         return Try {
             checkErrors(bindingResult)
 
-            userDeletesItemUseCase.perform(
-                UserDeletesItemUseCase.Request(
+            userDeletesItemCommand.perform(
+                UserDeletesItemCommand.Request(
                     uuid = UUID.fromString(checkNotNull(form.uuid)),
                 )
             )
@@ -33,7 +33,7 @@ class DeleteController(
             body(
                 HttpStatus.NO_CONTENT,
             )
-        }.catch(BadRequestException::class, UserDeletesItemUseCase.ItemIsNotFoundException::class) {
+        }.catch(BadRequestException::class, UserDeletesItemCommand.ItemIsNotFoundException::class) {
             body(
                 HttpStatus.BAD_REQUEST,
                 errorMessageList = listOf("不正なリクエストです。"),

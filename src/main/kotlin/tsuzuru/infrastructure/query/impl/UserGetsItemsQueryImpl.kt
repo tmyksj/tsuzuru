@@ -1,4 +1,4 @@
-package tsuzuru.infrastructure.useCase.impl
+package tsuzuru.infrastructure.query.impl
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
@@ -8,19 +8,19 @@ import tsuzuru.infrastructure.jpa.repository.TblItemRepository
 import tsuzuru.infrastructure.repository.impl.ItemRepositoryImpl
 import tsuzuru.security.principal.Principal
 import tsuzuru.security.service.SecurityService
-import tsuzuru.useCase.UserGetsItemsUseCase
+import tsuzuru.useCase.query.UserGetsItemsQuery
 
 @Component
 @Transactional
-class UserGetsItemsUseCaseImpl(
+class UserGetsItemsQueryImpl(
     private val tblItemRepository: TblItemRepository,
     private val itemRepositoryImpl: ItemRepositoryImpl,
     private val securityService: SecurityService,
-) : UserGetsItemsUseCase {
+) : UserGetsItemsQuery {
 
     override fun perform(
-        request: UserGetsItemsUseCase.Request,
-    ): UserGetsItemsUseCase.Response {
+        request: UserGetsItemsQuery.Request,
+    ): UserGetsItemsQuery.Response {
         val principal: Principal = securityService.principal()
 
         val itemEntityList: List<ItemEntity> = itemRepositoryImpl.run {
@@ -32,9 +32,9 @@ class UserGetsItemsUseCaseImpl(
                 ).toDomainEntity()
         }
 
-        return UserGetsItemsUseCase.Response(
+        return UserGetsItemsQuery.Response(
             itemList = itemEntityList.map {
-                UserGetsItemsUseCase.Item(
+                UserGetsItemsQuery.Item(
                     uuid = it.uuid,
                     body = it.body,
                     writtenDate = it.writtenDate,

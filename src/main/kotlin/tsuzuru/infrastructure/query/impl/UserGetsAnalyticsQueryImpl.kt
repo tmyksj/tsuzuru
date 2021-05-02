@@ -1,4 +1,4 @@
-package tsuzuru.infrastructure.useCase.impl
+package tsuzuru.infrastructure.query.impl
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -8,22 +8,22 @@ import tsuzuru.infrastructure.repository.impl.ItemRepositoryImpl
 import tsuzuru.infrastructure.sudachi.service.MorphologicalAnalysisService
 import tsuzuru.security.principal.Principal
 import tsuzuru.security.service.SecurityService
-import tsuzuru.useCase.UserGetsAnalyticsUseCase
+import tsuzuru.useCase.query.UserGetsAnalyticsQuery
 import java.time.LocalDate
 import kotlin.streams.toList
 
 @Component
 @Transactional
-class UserGetsAnalyticsUseCaseImpl(
+class UserGetsAnalyticsQueryImpl(
     private val tblItemRepository: TblItemRepository,
     private val itemRepositoryImpl: ItemRepositoryImpl,
     private val morphologicalAnalysisService: MorphologicalAnalysisService,
     private val securityService: SecurityService,
-) : UserGetsAnalyticsUseCase {
+) : UserGetsAnalyticsQuery {
 
     override fun perform(
-        request: UserGetsAnalyticsUseCase.Request,
-    ): UserGetsAnalyticsUseCase.Response {
+        request: UserGetsAnalyticsQuery.Request,
+    ): UserGetsAnalyticsQuery.Response {
         val principal: Principal = securityService.principal()
 
         val itemEntityList: List<ItemEntity> = itemRepositoryImpl.run {
@@ -41,30 +41,30 @@ class UserGetsAnalyticsUseCaseImpl(
         val dayMap: Map<LocalDate, List<Pair<ItemEntity, List<String>>>> = nounList
             .groupBy { it.first.writtenDate.toLocalDate() }
 
-        val dayList: List<UserGetsAnalyticsUseCase.Day> = request.range.start
+        val dayList: List<UserGetsAnalyticsQuery.Day> = request.range.start
             .datesUntil(request.range.endInclusive.plusDays(1)).toList()
             .map {
-                UserGetsAnalyticsUseCase.Day(
+                UserGetsAnalyticsQuery.Day(
                     date = it,
                     nounList = dayMap[it]?.format() ?: listOf(),
                     size = dayMap[it]?.size ?: 0,
                 )
             }
 
-        return UserGetsAnalyticsUseCase.Response(
+        return UserGetsAnalyticsQuery.Response(
             dayList = dayList,
             nounList = nounList.format(),
             size = itemEntityList.size,
         )
     }
 
-    private fun List<Pair<ItemEntity, List<String>>>.format(): List<UserGetsAnalyticsUseCase.Noun> {
+    private fun List<Pair<ItemEntity, List<String>>>.format(): List<UserGetsAnalyticsQuery.Noun> {
         return flatMap { it.second }
             .groupBy { it }
             .values
             .sortedByDescending { it.size }
             .map {
-                UserGetsAnalyticsUseCase.Noun(
+                UserGetsAnalyticsQuery.Noun(
                     value = it.first(),
                     size = it.size,
                 )

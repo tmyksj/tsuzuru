@@ -1,20 +1,20 @@
-package tsuzuru.useCase
+package tsuzuru.useCase.query
 
-import tsuzuru.common.useCase.UseCase
+import tsuzuru.common.useCase.query.AbstractQuery
 import java.time.LocalDate
 
-interface UserGetsAnalyticsUseCase
-    : UseCase<UserGetsAnalyticsUseCase.Request, UserGetsAnalyticsUseCase.Response> {
+interface UserGetsAnalyticsQuery
+    : AbstractQuery<UserGetsAnalyticsQuery.Request, UserGetsAnalyticsQuery.Response> {
 
     class Request(
         val range: ClosedRange<LocalDate>,
-    ) : UseCase.Request
+    ) : AbstractQuery.Request
 
     class Response(
         val dayList: List<Day>,
         val nounList: List<Noun>,
         val size: Int,
-    ) : UseCase.Response
+    ) : AbstractQuery.Response
 
     data class Day(
         val date: LocalDate,

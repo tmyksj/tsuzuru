@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.api.item.IndexForm
-import tsuzuru.useCase.UserGetsItemsUseCase
+import tsuzuru.useCase.query.UserGetsItemsQuery
 
 @RestController
 class IndexController(
-    private val userGetsItemsUseCase: UserGetsItemsUseCase,
+    private val userGetsItemsQuery: UserGetsItemsQuery,
 ) : AbstractControllerImpl() {
 
     @RequestMapping(method = [RequestMethod.GET], path = ["/api/item"])
@@ -23,8 +23,8 @@ class IndexController(
         return Try {
             checkErrors(bindingResult)
 
-            val response: UserGetsItemsUseCase.Response = userGetsItemsUseCase.perform(
-                UserGetsItemsUseCase.Request(
+            val response: UserGetsItemsQuery.Response = userGetsItemsQuery.perform(
+                UserGetsItemsQuery.Request(
                     page = checkNotNull(form.page),
                     size = checkNotNull(form.size),
                 )
