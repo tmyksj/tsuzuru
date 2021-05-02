@@ -1,4 +1,4 @@
-package tsuzuru.infrastructure.useCase.query.impl
+package tsuzuru.infrastructure.query.impl
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
