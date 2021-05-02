@@ -7,6 +7,12 @@
     <title th:text="|tsuzuru admin|"></title>
     <link th:href="|https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css|"
           th:rel="|stylesheet|">
+    <style>
+        .checked\:border-red-900:checked {
+            --tw-border-opacity: 1;
+            border-color: rgba(127, 29, 29, var(--tw-border-opacity));
+        }
+    </style>
     <script th:src="|https://unpkg.com/apexcharts@^1|"></script>
     <script th:src="|https://unpkg.com/vue@next|"></script>
 </head>

@@ -9,6 +9,30 @@
     <th:block sec:authorize="${isAuthenticated()}">
         <div th:class="|bottom-2 fixed left-0 right-0 top-32|">
             <div th:class="|flex h-full mx-auto w-11/12|">
+                <div th:class="|pr-12 w-4/12|">
+                    <h2 th:class="|mb-2 text-xl|"
+                        th:text="|最近の活動|"></h2>
+                    <div th:class="|my-2|">
+                        <span th:class="|text-gray-500 text-xs|"
+                              th:text="|投稿数|"></span>
+                        <p th:text="|{{size}}|"></p>
+                    </div>
+                    <div th:class="|my-2|">
+                        <span th:class="|text-gray-500 text-xs|"
+                              th:text="|単語|"></span>
+                        <div>
+                            <span th:class="|pr-4|"
+                                  th:text="|{{noun.value}}|"
+                                  th:v-bind:key="|noun.value|"
+                                  th:v-for="|noun in nounList|"></span>
+                        </div>
+                    </div>
+                    <div th:class="|my-8|">
+                        <a th:class="|text-blue-900 text-sm|"
+                           th:href="@{/analytics}"
+                           th:text="|詳細な解析|"></a>
+                    </div>
+                </div>
                 <div th:class="|flex flex-col w-8/12|">
                     <div th:attr="ref=|itemList|"
                          th:class="|flex-1 overflow-y-scroll|">
@@ -124,30 +148,6 @@
                             </svg>
                         </button>
                     </form>
-                </div>
-                <div th:class="|pl-12 w-4/12|">
-                    <h2 th:class="|my-4 text-xl|"
-                        th:text="|最近の活動|"></h2>
-                    <div th:class="|my-4|">
-                        <span th:class="|text-gray-500 text-xs|"
-                              th:text="|投稿数|"></span>
-                        <p th:text="|{{size}}|"></p>
-                    </div>
-                    <div th:class="|my-4|">
-                        <span th:class="|text-gray-500 text-xs|"
-                              th:text="|単語|"></span>
-                        <div>
-                            <span th:class="|pr-4|"
-                                  th:text="|{{noun.value}}|"
-                                  th:v-bind:key="noun.value"
-                                  th:v-for="|noun in nounList|"></span>
-                        </div>
-                    </div>
-                    <div th:class="|my-8|">
-                        <a th:class="|text-blue-900 text-sm|"
-                           th:href="@{/analytics}"
-                           th:text="|詳細な解析|"></a>
-                    </div>
                 </div>
             </div>
         </div>

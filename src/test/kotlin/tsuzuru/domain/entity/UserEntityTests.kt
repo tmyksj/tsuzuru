@@ -37,4 +37,17 @@ class UserEntityTests {
         }.isInstanceOf(UserEntity.PasswordMustMatchException::class.java)
     }
 
+    @Test
+    fun modifyProfileName_modifies_profileName() {
+        val profileName: String = UUID.randomUUID().toString()
+        val entity: UserEntity = entitySupport.userEntity().modifyProfileName(profileName)
+        Assertions.assertThat(entity.profileName).isEqualTo(profileName)
+    }
+
+    @Test
+    fun modifyScope_modifies_scope() {
+        val entity: UserEntity = entitySupport.userEntity().modifyScope(UserEntity.Scope.Public)
+        Assertions.assertThat(entity.scope).isEqualTo(UserEntity.Scope.Public)
+    }
+
 }

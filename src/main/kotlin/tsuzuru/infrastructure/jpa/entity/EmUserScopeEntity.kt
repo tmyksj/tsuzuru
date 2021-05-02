@@ -10,24 +10,12 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "tbl_user")
-data class TblUserEntity(
+@Table(name = "em_user_scope")
+data class EmUserScopeEntity(
 
-    @field:Column(name = "uuid")
+    @field:Column(name = "value")
     @field:Id
-    var uuid: String? = null,
-
-    @field:Column(name = "name")
-    var name: String? = null,
-
-    @field:Column(name = "password_encrypted")
-    var passwordEncrypted: String? = null,
-
-    @field:Column(name = "profile_name")
-    var profileName: String? = null,
-
-    @field:Column(name = "em_user_scope_value")
-    var emUserScopeValue: String? = null,
+    var value: String? = null,
 
     ) : AbstractEntity() {
 
