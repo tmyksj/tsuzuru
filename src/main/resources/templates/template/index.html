@@ -20,7 +20,7 @@
                     <div th:class="|my-2|">
                         <span th:class="|text-gray-500 text-xs|"
                               th:text="|単語|"></span>
-                        <div>
+                        <div th:class="|break-words|">
                             <span th:class="|pr-4|"
                                   th:text="|{{noun.value}}|"
                                   th:v-bind:key="|noun.value|"
