@@ -25,9 +25,7 @@ class UserModifiesItemCommandImpl(
             throw UserModifiesItemCommand.ItemIsNotFoundException()
         }
 
-        itemRepository.save(
-            itemEntity.modifyBody(request.body)
-        )
+        itemRepository.save(itemEntity.modifyBody(request.body))
 
         return UserModifiesItemCommand.Response()
     }
