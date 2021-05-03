@@ -1,18 +1,18 @@
 package tsuzuru.presentation.controller.api.u
 
 import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RestController
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.api.u.DetailForm
 import tsuzuru.useCase.query.GuestGetsUserActivityQuery
 import java.time.LocalDate
 
-@Controller
+@RestController
 class DetailController(
     private val guestGetsUserActivityQuery: GuestGetsUserActivityQuery,
 ) : AbstractControllerImpl() {

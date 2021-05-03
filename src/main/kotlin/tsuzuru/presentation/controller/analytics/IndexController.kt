@@ -1,17 +1,17 @@
 package tsuzuru.presentation.controller.analytics
 
 import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
 import tsuzuru.common.presentation.controller.impl.AbstractControllerImpl
 import tsuzuru.presentation.form.analytics.IndexForm
 import tsuzuru.useCase.query.UserGetsAnalyticsQuery
 
-@RestController
+@Controller
 class IndexController(
     private val userGetsAnalyticsQuery: UserGetsAnalyticsQuery,
 ) : AbstractControllerImpl() {

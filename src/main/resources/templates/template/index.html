@@ -37,7 +37,7 @@
                     <div th:attr="ref=|itemList|"
                          th:class="|flex-1 overflow-y-scroll|">
                         <div th:class="|my-4|"
-                             th:v-bind:key="item.uuid"
+                             th:v-bind:key="|item.uuid|"
                              th:v-for="|item in itemList|">
                             <div th:class="|relative|"
                                  th:v-if="|item.mode === 'default'|">
