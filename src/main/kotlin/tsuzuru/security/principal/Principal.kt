@@ -11,7 +11,7 @@ data class Principal(
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return userEntity.roleList.map {
-            SimpleGrantedAuthority("ROLE_${it.toString().toUpperCase()}")
+            SimpleGrantedAuthority("ROLE_${it.toString().uppercase()}")
         }.toMutableList()
     }
 
